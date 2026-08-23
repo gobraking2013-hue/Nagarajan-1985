@@ -1,359 +1,409 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
-<meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/>
-<meta name="mm1-source-of-truth" content="Admin Excel / Employee_Master + KPI_Input">
-<meta name="mm1-comments-rule" content="Exactly 3 evaluator bullet comments; PDF single-line, display fully readable; no repeated KPI ratio or Good job text">
-<meta name="mm1-refresh-status" content="V85 final tested from Admin-source Excel formulas; Admin/Excel source-of-truth; final interlinked build">
-<title>MM1-MH H1 Micro KPI Performance Report</title>
-<style>
-*{box-sizing:border-box}body{margin:0;background:#06131d;color:#eaf2f8;font-family:Arial,Helvetica,sans-serif}
-.app{max-width:1500px;margin:auto}.topbar{position:sticky;top:0;z-index:100;background:#071827;border-bottom:1px solid #27475c;padding:9px 14px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-.topbar b{font-size:15px}.btn,.filelabel{border:1px solid #38bdf8;background:#0b2a3e;color:#eaf2f8;border-radius:7px;padding:8px 12px;font-weight:800;cursor:pointer}.btn.green{border-color:#34d399}.status{font-size:13px;color:#9bb0bf}
-header{padding:22px 18px 16px;border-bottom:1px solid #203746}.eyebrow{font-size:14px;color:#38bdf8;font-weight:800;letter-spacing:1.4px}.title{font-size:36px;font-weight:900;margin:5px 0}.subtitle{font-size:13px;color:#91a8b8}
-main{padding:14px 16px 30px}.panel{background:#081924;border:1px solid #203c4d;border-radius:12px;margin-bottom:14px;overflow:hidden}.panelhead{padding:11px 14px;border-bottom:1px solid #203c4d;display:flex;justify-content:space-between;gap:10px;align-items:center}.cap{font-size:14px;font-weight:900;letter-spacing:.6px}.muted{font-size:12px;color:#7890a1}
-.controls{padding:12px 14px;display:flex;gap:9px;flex-wrap:wrap}.controls input,.controls select{background:#06131d;color:#eaf2f8;border:1px solid #31546a;border-radius:7px;padding:9px 10px;min-width:210px}
-.alloc{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;padding:12px 14px}.alloccard{border:1px solid #27475a;background:#071720;border-radius:9px;padding:10px;text-align:center}.alloccard .g{font-size:12px;font-weight:900}.alloccard strong{display:block;font-size:25px;margin-top:3px}.alloccard small{color:#8198a8}
-.summary{padding:0 14px 14px}.cathead{display:flex;justify-content:space-between;align-items:center;margin:4px 0 7px}.cathead strong{font-size:14px}.gradegrid{display:grid;grid-template-columns:repeat(5,1fr);gap:7px}.gradecard{border:1px solid #27475a;border-radius:9px;padding:10px;cursor:pointer;background:#071720}.gradecard:hover{border-color:#38bdf8}.gradecard b{font-size:12px}.gradecard strong{display:block;font-size:25px;margin-top:2px}.gradecard span{font-size:10px;color:#8198a8}
-.tablewrap{overflow:auto}.grade-table,.kpi-table{width:100%;border-collapse:collapse;min-width:720px}.grade-table th,.grade-table td,.kpi-table th,.kpi-table td{border:1px solid #294553;padding:8px 7px}.grade-table th,.kpi-table th{background:#0b202e;color:#a9becb;font-size:12px;text-align:left}.grade-table td{font-size:12px}.grade-table tr:hover{background:#0b2230;cursor:pointer}
-.personhead{display:grid;grid-template-columns:2.3fr 1fr 1fr 1fr;gap:10px;padding:14px}.personbox{border:1px solid #284657;border-radius:9px;padding:10px;background:#071720}.personname{font-size:20px;font-weight:900}.meta{font-size:12px;color:#8198a8;margin-top:3px}.score{font-size:25px;font-weight:900}.kpicounts{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:10px}.countbox{border:1px solid #294b5d;border-radius:8px;padding:8px;text-align:center;background:#071720}.countbox b{display:block;font-size:30px}.countbox span{font-size:10px;color:#93a8b6}.ach b{color:#34d399}.not b{color:#f87171}
-.kpi-table{min-width:930px}.kpi-table th{text-align:center}.kpi-table td{text-align:center;font-size:12px}.kpi-table .param{text-align:left;font-weight:800;min-width:330px}.con{color:#38bdf8;font-size:10px;font-weight:700}.badge{display:inline-block;min-width:28px;padding:4px 7px;border-radius:999px;font-weight:900}
-.empty{padding:25px 14px;color:#7890a1;text-align:center}.logic{padding:10px 14px;border-top:1px solid #203c4d;color:#90a6b5;font-size:12px;display:flex;gap:18px;flex-wrap:wrap}
-footer{padding:14px 16px 25px;color:#667f90;font-size:10px}
-@media(max-width:760px){.title{font-size:23px}.alloc{grid-template-columns:repeat(2,1fr)}.gradegrid{grid-template-columns:repeat(2,1fr)}.personhead{grid-template-columns:1fr}.kpicounts{grid-template-columns:repeat(3,1fr)}.kpi-table{min-width:850px}.topbar{position:relative}}
+    <meta charset="utf-8"/>
+    <meta content="width=device-width,initial-scale=1" name="viewport"/>
+    <meta name="mm1-source-of-truth" content="Admin Excel / Employee_Master + KPI_Input">
+    <meta name="mm1-comments-rule" content="Exactly 3 evaluator bullet comments; PDF single-line, display fully readable; no repeated KPI ratio or Good job text">
+    <meta name="mm1-refresh-status" content="V85 final tested from Admin-source Excel formulas; Admin/Excel source-of-truth; final interlinked build">
+    <title>MM1-MH H1 Micro KPI Performance Report</title>
+    <style>
+        *{box-sizing:border-box}
+        body{margin:0;background:#06131d;color:#eaf2f8;font-family:Arial,Helvetica,sans-serif}
+        .app{max-width:1500px;margin:auto}
+        .topbar{position:sticky;top:0;z-index:100;background:#071827;border-bottom:1px solid #27475c;padding:9px 14px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:space-between}
+        .topbar b{font-size:15px}
+        .topbar-right{display:flex;gap:15px;align-items:center}
+        .topbar a,.btn,.filelabel{border:1px solid #38bdf8;background:#0b2a3e;color:#eaf2f8;border-radius:7px;padding:8px 12px;font-weight:800;cursor:pointer;text-decoration:none;font-size:12px;transition:all 0.3s;white-space:nowrap}
+        .topbar a:hover,.btn:hover{background:#0f3a4e;box-shadow:0 0 8px rgba(56,189,248,0.3)}
+        .btn.admin{border-color:#34d399;color:#34d399}
+        .btn.admin:hover{background:#0a3d2c;box-shadow:0 0 8px rgba(52,211,153,0.3)}
+        .btn.green{border-color:#34d399}
+        .status-badge{display:inline-block;padding:6px 12px;border-radius:20px;font-size:11px;font-weight:700;background:#0a3d2c;color:#34d399;border:1px solid #34d399}
+        .status-badge.error{background:#3a1a1a;color:#ef4444;border-color:#ef4444}
+        header{padding:22px 18px 16px;border-bottom:1px solid #203746}
+        .eyebrow{font-size:14px;color:#38bdf8;font-weight:800;letter-spacing:1.4px}
+        .title{font-size:36px;font-weight:900;margin:5px 0}
+        .subtitle{font-size:13px;color:#7890a1;margin-top:4px}
+        main{padding:14px 16px 30px}
+        .panel{background:#081924;border:1px solid #203c4d;border-radius:12px;margin-bottom:14px;overflow:hidden}
+        .panelhead{padding:11px 14px;border-bottom:1px solid #203c4d;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;background:#0a2a35}
+        .panelhead .cap{font-size:13px;color:#38bdf8;font-weight:800;text-transform:uppercase;letter-spacing:0.5px}
+        .panelhead .muted{font-size:12px;color:#7890a1}
+        .controls{padding:12px 14px;display:flex;gap:9px;flex-wrap:wrap}
+        .controls input,.controls select{background:#06131d;color:#eaf2f8;border:1px solid #31546a;border-radius:7px;padding:9px 10px;min-width:200px;font-size:12px}
+        .alloc{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;padding:12px 14px}
+        .alloccard{border:1px solid #27475a;background:#071720;border-radius:9px;padding:10px;text-align:center}
+        .alloccard .g{font-size:32px;color:#38bdf8;margin-bottom:4px}
+        .alloccard strong{font-size:11px;color:#7890a1;display:block}
+        .summary{padding:0 14px 14px}
+        .cathead{display:flex;justify-content:space-between;align-items:center;margin:4px 0 7px}
+        .cathead strong{font-size:14px}
+        .gradegrid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+        .gradecard{background:#071720;border:1px solid #27475a;border-radius:9px;padding:12px;text-align:center}
+        .gradecard b{font-size:13px;color:#7890a1}
+        .gradecard strong{font-size:24px;color:#38bdf8;display:block;margin:5px 0}
+        .gradecard span{font-size:11px;color:#7890a1}
+        .tablewrap{overflow:auto}
+        .grade-table,.kpi-table{width:100%;border-collapse:collapse;min-width:720px}
+        .grade-table th,.grade-table td,.kpi-table th,.kpi-table td{border:1px solid #294553;padding:8px 7px;text-align:center;font-size:12px}
+        .grade-table th,.kpi-table th{background:#0a2a35;color:#38bdf8;font-weight:800}
+        .grade-table td,.kpi-table td{background:#06131d;color:#eaf2f8}
+        .kpi-table{min-width:930px}
+        .kpi-table .param{text-align:left;font-weight:800;min-width:330px}
+        .con{color:#38bdf8;font-size:11px;font-weight:700}
+        .empty{padding:25px 14px;color:#7890a1;text-align:center}
+        footer{padding:14px 16px 25px;color:#667f90;font-size:10px}
+        .refresh-status{padding:10px 14px;background:#0a3d2c;border:1px solid #34d399;border-radius:7px;margin-bottom:14px;color:#34d399;font-size:12px;font-weight:700}
+        .refresh-status.error{background:#3a1a1a;border-color:#ef4444;color:#ef4444}
+        @media(max-width:760px){
+            .title{font-size:23px}
+            .alloc{grid-template-columns:repeat(2,1fr)}
+            .gradegrid{grid-template-columns:repeat(2,1fr)}
+            .topbar{flex-direction:column;align-items:flex-start}
+            .topbar-right{flex-direction:column;width:100%}
+            .controls{flex-direction:column}
+            .controls select{width:100%}
+        }
+    </style>
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
+</head>
+<body>
 
-@media print{
-  @page{size:A4 landscape;margin:4mm}
-  html,body{background:#fff!important;color:#000!important;font-family:Arial,Helvetica,sans-serif}
-  body.print-grade #root>*:not(#gradePanelPrint),body.print-person #root>*:not(#individual){display:none!important}
-  body.print-grade .topbar,body.print-grade header,body.print-grade footer,body.print-person .topbar,body.print-person header,body.print-person footer{display:none!important}
-  .printbtn,.controls{display:none!important}
-  .panel,.panelhead,.grade-table,.kpi-table,.grade-table th,.grade-table td,.kpi-table th,.kpi-table td,.personhead,.countbox,.badge,.con{background:#fff!important;background-image:none!important;color:#000!important;box-shadow:none!important}
-  .panel{border:1px solid #000!important}
-  .panelhead{border-bottom:1px solid #000!important}
-  .grade-table,.kpi-table{min-width:0!important;width:100%!important}
-  .grade-table th,.grade-table td,.kpi-table th,.kpi-table td{border:1px solid #000!important;color:#000!important;padding:3px 4px!important;font-size:8px!important;line-height:1.15!important}
-  .kpi-table .param{min-width:0!important}
-  .personhead{grid-template-columns:2.3fr 1fr 1fr 1fr!important;padding:7px!important;border:1px solid #000!important}
-  .personname{font-size:18px!important;color:#000!important}.score{font-size:20px!important;color:#000!important}.countbox b{font-size:17px!important;color:#000!important}
-  .tablewrap{overflow:visible!important}
-  body.print-person #individual{margin:0!important}
-  body.print-person #person{max-height:185mm!important;overflow:hidden!important}
-  body.print-grade #gradeArea{max-height:185mm!important;overflow:hidden!important}
-}
+<div class="app">
+    <!-- TOP BAR WITH ADMIN LINK -->
+    <div class="topbar">
+        <b>📊 MM1-MH H1 Micro KPI</b>
+        <div class="topbar-right">
+            <a href="admin.html" class="btn admin">⚙️ Admin Panel</a>
+            <span class="status-badge" id="statusBadge">Loading...</span>
+        </div>
+    </div>
 
-/* Individual summary: Overall Ranking */
-.rankscore{font-weight:800;letter-spacing:.2px;}
-.personbox:has(.rankscore){border-color:#2b6cb0;background:linear-gradient(180deg,#f7fbff 0%,#ffffff 100%);}
+    <!-- HEADER -->
+    <header>
+        <div class="eyebrow">PERFORMANCE DASHBOARD</div>
+        <h1 class="title">MM1-MH H1 Micro KPI Performance Report</h1>
+        <p class="subtitle">Last Updated: <span id="lastUpdateTime">Never</span> | Data Status: <span id="dataStatus" style="color:#7890a1">No Data Loaded</span></p>
+    </header>
 
-/* V22: Grading PDF — same column width except Employee Name */
-<style>
-.grade-pdf-page .grade-table{table-layout:fixed!important;width:190mm!important}
-.grade-pdf-page .grade-table th:nth-child(1),.grade-pdf-page .grade-table td:nth-child(1){width:7%!important}
-.grade-pdf-page .grade-table th:nth-child(2),.grade-pdf-page .grade-table td:nth-child(2){width:23%!important;text-align:left!important}
-.grade-pdf-page .grade-table th:nth-child(5),.grade-pdf-page .grade-table td:nth-child(5),
-.grade-pdf-page .grade-table th:nth-child(6),.grade-pdf-page .grade-table td:nth-child(6),
-.grade-pdf-page .grade-table th:nth-child(7),.grade-pdf-page .grade-table td:nth-child(7),
-.grade-pdf-page .grade-table th:nth-child(8),.grade-pdf-page .grade-table td:nth-child(8),
-.grade-pdf-page .grade-table th:nth-child(9),.grade-pdf-page .grade-table td:nth-child(9){width:14%!important}
-</style>
-</style>
-<script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
-<style id="final-fixes-2">.gradecard strong{font-size:32px!important}.gradecard span{font-size:12px!important}.alloccard .g{font-size:36px!important}.alloccard strong{font-size:12px!important}.kpi-table th,.kpi-table td{font-size:13px!important}@media print{@page{size:A4 landscape;margin:5mm}body{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}.kpi-table{width:100%!important;min-width:0!important}.kpi-table th,.kpi-table td{font-size:7px!important;padding:2px!important}.personhead{transform:scale(.9);transform-origin:top left;width:111%}}}</style>
-<style id="final-fixes">
-.gradeTabs{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}.catTabs{display:flex;gap:4px;align-items:center;flex-wrap:wrap}.catTabs>b{margin-right:4px}.gradeTab{padding:5px 10px;border:1px solid #777;background:#fff;cursor:pointer;font-weight:700}.gradeTab.active{background:#000;color:#fff}.grade-table th,.grade-table td{font-size:12px}.grade-table th{font-weight:800}.grade-table td{padding:5px}.summary{margin-top:8px}.logic{display:flex;gap:18px;flex-wrap:wrap;margin-top:10px;font-size:12px}
-</style>
-<style id="best-theme">
-:root{--navy:#17365d;--blue:#2f75b5;--blue2:#5b9bd5;--ice:#eef5fb;--line:#c8d8e6;--text:#172033;--muted:#5b6b7a;--white:#fff;}
-body{font-family:Arial,Helvetica,sans-serif;background:linear-gradient(135deg,#f7fbff 0%,#eef5fb 50%,#ffffff 100%);color:var(--text)}
-header{background:linear-gradient(135deg,#17365d,#245b91 55%,#2f75b5);box-shadow:0 8px 22px rgba(23,54,93,.18);border-bottom:3px solid #5b9bd5}
-.panel{background:rgba(255,255,255,.97);border:1px solid var(--line);box-shadow:0 5px 18px rgba(23,54,93,.09);border-radius:12px}
-.panelhead{background:linear-gradient(90deg,#f2f7fc,#ffffff);border-bottom:1px solid var(--line)}
-.gradecard{background:linear-gradient(145deg,#fff,#eef5fb);border:1px solid #c8d8e6;box-shadow:0 4px 12px rgba(47,117,181,.10)}
-.gradecard:hover{border-color:#2f75b5;transform:translateY(-1px)}
-.kpi-table thead th,.grade-table thead th{background:#17365d;color:#fff}
-.kpi-table tbody tr:nth-child(even),.grade-table tbody tr:nth-child(even){background:#f6f9fc}
-.badge{font-weight:700}
-.personhead{background:linear-gradient(135deg,#f4f8fc,#ffffff)}
-.personbox{border:1px solid #c8d8e6;box-shadow:0 3px 10px rgba(23,54,93,.07)}
-</style>
-<style id="font-visibility-fix">
-/* Readability-only fix: keeps the existing theme/layout and changes font contrast only. */
-.gradecard b{font-size:22px!important;color:#17365d!important;font-weight:900!important}
-.gradecard strong{font-size:32px!important;color:#172033!important}
-.gradecard span{font-size:12px!important;color:#536779!important}
-.alloccard .g{color:#17365d!important}
-.alloccard strong{color:#172033!important}
-.cathead strong{color:#17365d!important}
-.muted{color:#536779!important}
-.grade-table td,.grade-table td *,.kpi-table td,.kpi-table td *{color:#172033}
-.grade-table th,.kpi-table th{color:#ffffff!important}
-.kpi-table .param{color:#172033!important}
-.con{color:#075985!important;font-size:11px!important;font-weight:800!important}
-.personbox .meta{color:#536779!important}
-.personbox .personname{color:#172033!important}
-.personbox .score{color:#17365d!important;font-weight:900!important}
-.kpicounts .countbox b{color:#17365d!important}
-.kpicounts .countbox span{color:#536779!important}
-.kpicounts .countbox.ach b{color:#047857!important}
-.kpicounts .countbox.not b{color:#B91C1C!important}
-.badge{background:#ffffff!important}
-.logic{color:#536779!important}
-footer{color:#536779!important}
-</style>
-<style id="readable-individual-heading-theme">
-/* Readability-only update: individual summary + section headings */
-.panelhead{
-  background:linear-gradient(90deg,#17365d 0%,#245b91 65%,#2f75b5 100%) !important;
-  color:#ffffff !important;
-  border-bottom:2px solid #5b9bd5 !important;
-  min-height:44px;
-}
-.panelhead .cap,.panelhead .muted{color:#ffffff !important;}
-.panelhead .muted{opacity:.92;}
-.panelhead .btn{background:#ffffff !important;color:#17365d !important;border-color:#ffffff !important;}
-#individual .personhead{
-  background:#eaf3fb !important;
-  border:1px solid #b7cfe3 !important;
-  border-radius:12px;
-  padding:14px;
-}
-#individual .personbox{
-  background:#ffffff !important;
-  border:1px solid #b7cfe3 !important;
-  box-shadow:0 2px 8px rgba(23,54,93,.08) !important;
-}
-#individual .personbox .meta{color:#40576b !important;}
-#individual .personbox .personname{color:#17365d !important;}
-#individual .personbox .score{color:#17365d !important;}
-#individual .personbox:nth-child(3) .score{color:#6b21a8 !important;}
-#individual .kpicounts .countbox{background:#f7fbff !important;border-color:#b7cfe3 !important;}
-#individual .kpicounts .countbox b{color:#17365d !important;}
-#individual .kpicounts .countbox span{color:#40576b !important;}
-#individual .kpicounts .countbox.ach b{color:#047857 !important;}
-#individual .kpicounts .countbox.not b{color:#b91c1c !important;}
-#individual .kpi-table thead th{background:#17365d !important;color:#ffffff !important;}
-#individual .kpi-table tbody td{color:#172033 !important;background:#ffffff !important;}
-#individual .kpi-table tbody tr:nth-child(even) td{background:#f6f9fc !important;}
-</style>
-<style id="heading-color-only-override">
-/* Heading colour only: all other dashboard logic/layout remains unchanged */
-.section-title, .section-header, .panel-title, .card-title, h2, h3 {
-  background: #163A63 !important;
-  color: #FFFFFF !important;
-}
-</style>
-<style id="main-report-title-readability">
-/* Main report title readability only */
-.title{
-  display:inline-block;
-  background:#F4F8FC !important;
-  color:#163A63 !important;
-  padding:6px 14px !important;
-  border-left:6px solid #1F5A91;
-  border-radius:6px;
-  letter-spacing:.3px;
-}
-</style>
-<style id="pdf-black-heading-override">
-@media print {
-  h1, h2, h3, h4, h5, h6, .heading, .section-heading, .report-title, .pdf-heading { color:#000000 !important; }
-}
-</style>
-<style id="md-level-a4-design">
-:root{
- --hyundai-blue:#002C5F;
- --hyundai-blue-2:#0057A8;
- --hyundai-light:#EAF3FA;
- --hyundai-pale:#F6F9FC;
- --ink:#17202A;
- --muted:#52606D;
- --border:#CFD9E3;
-}
-body{background:var(--hyundai-pale)!important;color:var(--ink)!important;}
-h1,h2,h3,h4,.heading,.section-title,.section-heading{color:#000!important;}
-.summary,.summary-area{
- background:var(--hyundai-blue)!important;
- color:#fff!important;
- border-color:var(--hyundai-blue)!important;
-}
-.summary *,.summary-area *{color:#fff!important;}
-.summary-card{
- background:#fff!important;
- color:var(--ink)!important;
- border:1px solid #B8CCE0!important;
- box-shadow:0 3px 12px rgba(0,44,95,.12)!important;
-}
-.summary-card .value,.summary-card .number,.summary-card .metric,
-.summary-card strong{color:var(--hyundai-blue)!important;font-weight:800!important;}
-.section-title,.section-heading,.card-title{
- background:var(--hyundai-blue)!important;
- color:#fff!important;
- border-color:var(--hyundai-blue)!important;
-}
-table thead th,.kpi-table thead th{
- background:var(--hyundai-blue)!important;
- color:#fff!important;
- font-weight:800!important;
-}
-table td,.kpi-table td{color:var(--ink)!important;}
-.employee-header,.employee-summary{
- background:linear-gradient(135deg,#fff,var(--hyundai-light))!important;
- border:1px solid var(--hyundai-blue-2)!important;
-}
-.overall-achievement,.overall-achievement *{
- color:var(--hyundai-blue)!important;font-weight:800!important;
-}
-button,.primary,.btn-primary{
- background:var(--hyundai-blue)!important;color:#fff!important;
- border-color:var(--hyundai-blue)!important;
-}
-@media print{
- @page{size:A4 portrait;margin:7mm;}
- html,body{
-   width:210mm!important;min-height:297mm!important;
-   background:#fff!important;color:#000!important;
-   -webkit-print-color-adjust:exact!important;
-   print-color-adjust:exact!important;
- }
- body{font-size:9.5pt!important;line-height:1.15!important;}
- h1{font-size:17pt!important;color:#000!important;}
- h2{font-size:13pt!important;color:#000!important;}
- h3{font-size:11pt!important;color:#000!important;}
- h4{font-size:10pt!important;color:#000!important;}
- table{font-size:8pt!important;}
- th,td{padding:3px 4px!important;}
- .summary,.summary-area{
-   background:var(--hyundai-blue)!important;color:#fff!important;
- }
- .summary-card{background:#fff!important;color:#000!important;}
- .summary-card .value,.summary-card .number,.summary-card .metric,
- .summary-card strong{color:var(--hyundai-blue)!important;}
- *{break-inside:avoid!important;}
-}
-</style>
-<style id="a4-readable-layout">
-@media print{
-  @page{size:A4 portrait;margin:6mm;}
-  html,body{
-    width:210mm!important;
-    min-height:297mm!important;
-    background:#fff!important;
-    color:#000!important;
-    -webkit-print-color-adjust:exact!important;
-    print-color-adjust:exact!important;
-  }
-  body{
-    font-size:10.5pt!important;
-    line-height:1.22!important;
-  }
+    <!-- REFRESH STATUS -->
+    <div id="refreshStatus" style="display:none;"></div>
 
-  /* Employee/report heading */
-  h1{
-    font-size:18pt!important;
-    line-height:1.15!important;
-    margin:4mm 0 3mm!important;
-    color:#000!important;
-  }
-  h2{
-    font-size:13.5pt!important;
-    line-height:1.2!important;
-    margin:3mm 0 2mm!important;
-    color:#000!important;
-  }
-  h3{font-size:11.5pt!important;line-height:1.2!important;}
+    <!-- MAIN CONTENT -->
+    <main>
+        <!-- GRADE SUMMARY PANEL -->
+        <div class="panel">
+            <div class="panelhead">
+                <div class="cap">📊 Grade Distribution</div>
+                <div class="muted">Employee Performance Summary</div>
+            </div>
+            <div class="summary">
+                <div class="alloc" id="gradeSummary">
+                    <div class="alloccard">
+                        <div class="g">S</div>
+                        <strong>Grade S: <span id="countS">0</span></strong>
+                    </div>
+                    <div class="alloccard">
+                        <div class="g">A</div>
+                        <strong>Grade A: <span id="countA">0</span></strong>
+                    </div>
+                    <div class="alloccard">
+                        <div class="g">B</div>
+                        <strong>Grade B: <span id="countB">0</span></strong>
+                    </div>
+                    <div class="alloccard">
+                        <div class="g">C</div>
+                        <strong>Grade C: <span id="countC">0</span></strong>
+                    </div>
+                    <div class="alloccard">
+                        <div class="g">D</div>
+                        <strong>Grade D: <span id="countD">0</span></strong>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-  /* Summary cards: more breathing room */
-  .summary,.summary-area{
-    min-height:20mm!important;
-    padding:4mm!important;
-  }
-  .summary-card{
-    min-height:16mm!important;
-    padding:3mm 4mm!important;
-  }
-  .summary-card .value,.summary-card .number,.summary-card .metric{
-    font-size:15pt!important;
-    line-height:1.05!important;
-  }
-  .summary-card .label{
-    font-size:9pt!important;
-    line-height:1.15!important;
-  }
+        <!-- EMPLOYEE RANKING PANEL -->
+        <div class="panel">
+            <div class="panelhead">
+                <div class="cap">🏆 Employee Ranking</div>
+                <div class="muted">Based on Overall Achievement & Grades</div>
+            </div>
+            <div class="tablewrap">
+                <table class="grade-table" id="rankingTable">
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Employee Name</th>
+                            <th>Department</th>
+                            <th>Overall Score</th>
+                            <th>Grade</th>
+                        </tr>
+                    </thead>
+                    <tbody id="rankingBody">
+                        <tr><td colspan="5" class="empty">Loading employee data...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
 
-  /* Main KPI table */
-  table,.kpi-table{
-    width:100%!important;
-    table-layout:fixed!important;
-    border-collapse:collapse!important;
-    font-size:9.2pt!important;
-  }
+        <!-- INDIVIDUAL KPI DETAILS PANEL -->
+        <div class="panel">
+            <div class="panelhead">
+                <div class="cap">📈 KPI Details by Employee</div>
+                <div class="muted">Performance Metrics & Achievement</div>
+            </div>
+            <div class="controls">
+                <select id="employeeFilter" onchange="filterByEmployee()" style="flex:1">
+                    <option value="">Select Employee to View KPI Details...</option>
+                </select>
+            </div>
+            <div class="tablewrap">
+                <table class="kpi-table" id="kpiTable">
+                    <thead>
+                        <tr>
+                            <th>KPI Parameter</th>
+                            <th>FY Plan</th>
+                            <th>H1 Plan</th>
+                            <th>Actual</th>
+                            <th>Achievement %</th>
+                            <th>Grade</th>
+                        </tr>
+                    </thead>
+                    <tbody id="kpiBody">
+                        <tr><td colspan="6" class="empty">Select an employee to view KPI details</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
 
-  table thead th,.kpi-table thead th{
-    font-size:9.5pt!important;
-    line-height:1.15!important;
-    min-height:12mm!important;
-    height:12mm!important;
-    padding:3mm 2mm!important;
-    vertical-align:middle!important;
-    white-space:normal!important;
-    overflow-wrap:anywhere!important;
-    word-break:normal!important;
-  }
+    <!-- FOOTER -->
+    <footer>
+        <p>📋 MM1-MH H1 Micro KPI Performance Report | Version 85 | Data Source: Admin Excel Upload</p>
+        <p>Last Refresh: <span id="refreshTime">Never</span></p>
+    </footer>
+</div>
 
-  table tbody td,.kpi-table tbody td{
-    min-height:9mm!important;
-    height:9mm!important;
-    padding:2.2mm 2mm!important;
-    vertical-align:middle!important;
-    line-height:1.15!important;
-    white-space:normal!important;
-    overflow-wrap:anywhere!important;
-  }
+<script>
+    // Initialize Page
+    function initializePage() {
+        loadDataFromStorage();
+        updateStatusBadge();
+        // Check for updates every 5 seconds
+        setInterval(checkForUpdates, 5000);
+    }
 
-  /* Keep value and grade columns aligned and readable */
-  table th:nth-last-child(-n+3),
-  table td:nth-last-child(-n+3){
-    text-align:center!important;
-    vertical-align:middle!important;
-  }
+    // Check for data updates
+    function checkForUpdates() {
+        const currentData = localStorage.getItem('kpiData');
+        const lastRefresh = localStorage.getItem('lastRefreshTime');
+        
+        if (currentData && currentData !== '{}') {
+            const storedRefresh = document.getElementById('lastUpdateTime').textContent;
+            if (lastRefresh && lastRefresh !== storedRefresh) {
+                location.reload();
+            }
+        }
+    }
 
-  table td:last-child,.kpi-table td:last-child{
-    font-weight:800!important;
-    font-size:10pt!important;
-  }
+    // Load Data from localStorage (updated by Admin Panel)
+    function loadDataFromStorage() {
+        try {
+            const kpiData = localStorage.getItem('kpiData');
+            const lastRefresh = localStorage.getItem('lastRefreshTime');
 
-  .section-title,.section-heading,.card-title{
-    min-height:10mm!important;
-    padding:2.5mm 3mm!important;
-    font-size:11pt!important;
-    line-height:1.15!important;
-  }
+            if (!kpiData || kpiData === '{}') {
+                showRefreshStatus('⚠ No data loaded. Please use <a href="admin.html" style="color:#34d399">Admin Panel</a> to upload Excel file.', 'error');
+                document.getElementById('dataStatus').textContent = 'No Data Loaded';
+                document.getElementById('rankingBody').innerHTML = '<tr><td colspan="5" class="empty">No data available. Upload Excel file from Admin Panel.</td></tr>';
+                return;
+            }
 
-  /* Avoid awkward splits */
-  tr{break-inside:avoid!important;page-break-inside:avoid!important;}
-  .employee-header,.employee-summary,.summary-card{
-    break-inside:avoid!important;
-    page-break-inside:avoid!important;
-  }
+            const parsedData = JSON.parse(kpiData);
+            renderDashboard(parsedData);
+            
+            document.getElementById('lastUpdateTime').textContent = lastRefresh || 'Unknown';
+            document.getElementById('refreshTime').textContent = lastRefresh || 'Never';
+            document.getElementById('dataStatus').textContent = '✓ Data Loaded';
+            
+            showRefreshStatus(`✓ Data loaded successfully | Last Updated: ${lastRefresh}`, 'success');
+        } catch (error) {
+            console.error('Error loading data:', error);
+            showRefreshStatus('Error loading data from storage: ' + error.message, 'error');
+        }
+    }
 
-  /* Compact outer spacing so the larger text still fits A4 */
-  section,.section,.card{margin-bottom:3mm!important;}
-}
-</style>
-<style id="reference-mobile-theme">
-/* VISUAL / LAYOUT THEME ONLY — calculations, data, formulas and rules are untouched. */
-:root{
- --ref-bg:#04111a;--ref-bg2:#061923;--ref-card:#071d28;--ref-card2:#092331;
- --ref-line:#0b5368;--ref-line2:#0e6f88;--ref-cyan:#22d3ee;--ref-cyan2:#38bdf8;
- --ref-green:#22c55e;--ref-red:#ef4444;--ref-yellow:#facc15;--ref-text:#dff7ff;--ref-muted:#7fa5b5;
-}
-html{background:var(--ref-bg)!important}
-body{background:radial-gradient(circle at 50% -10%,#0b2737 0,#061923 28%,#04111a 72%)!important;color:var(--ref-text)!important;font-family:Arial,Helvetica,sans-serif!important;min-height:100vh}
-.app{max-width:1180px!important;margin:0 auto!important}
-.topbar{position:sticky!important;top:0!important;background:rgba(4,17,26,.97)!important;border-bottom:1px solid var(--ref-line)!important;padding:7px 10px!important;gap:6px!important;backdrop-filter:blur(8px)}
-.topbar b{font-size:12px!important;color:#b9ecf8!important}
-.btn,.filelabel{background:#062331!important;border:1px solid var(--ref-line2)!important;color:#d9f7ff!important;border-radius:5px!important;padding:5px 8px!important;font-size:10px!important}
-.btn:hover,.filelabel:hover{border-color:var(--ref-cyan)!important;background:#093043!important}
-.status{font-size:9px!im
+    // Render Dashboard
+    function renderDashboard(data) {
+        const employeeData = data['Employee_Master'] || [];
+        const kpiData = data['KPI_Input'] || [];
+
+        if (employeeData.length === 0 || kpiData.length === 0) {
+            document.getElementById('rankingBody').innerHTML = '<tr><td colspan="5" class="empty">No employee or KPI data available in the uploaded Excel</td></tr>';
+            return;
+        }
+
+        // Calculate grades and rankings
+        const employeeScores = calculateEmployeeScores(employeeData, kpiData);
+        const sortedEmployees = employeeScores.sort((a, b) => b.overallScore - a.overallScore);
+
+        // Render Rankings Table
+        renderRankingTable(sortedEmployees);
+
+        // Render Grade Distribution
+        renderGradeDistribution(sortedEmployees);
+
+        // Populate Employee Filter
+        populateEmployeeFilter(employeeData);
+
+        // Store for KPI detail view
+        window.currentEmployees = employeeData;
+        window.currentKPIs = kpiData;
+    }
+
+    // Calculate Employee Scores
+    function calculateEmployeeScores(employees, kpis) {
+        return employees.map(emp => {
+            const empKPIs = kpis.filter(k => k.EmpID === emp.ID || k.EmployeeID === emp.ID);
+            
+            let totalAchievement = 0;
+            let count = empKPIs.length || 1;
+
+            empKPIs.forEach(kpi => {
+                const ach = parseFloat(String(kpi.Achievement).replace('%', '')) || 0;
+                totalAchievement += ach;
+            });
+
+            const overallAchievement = totalAchievement / count;
+            const grade = getGradeFromAchievement(overallAchievement);
+            const overallScore = overallAchievement.toFixed(2);
+
+            return {
+                id: emp.ID,
+                name: emp.Name || 'Unknown',
+                department: emp.Department || 'N/A',
+                overallScore: parseFloat(overallScore),
+                grade: grade,
+                achievement: overallAchievement.toFixed(1)
+            };
+        });
+    }
+
+    // Get Grade Based on Achievement
+    function getGradeFromAchievement(achievement) {
+        if (achievement >= 120) return 'S';
+        if (achievement >= 100) return 'A';
+        if (achievement >= 80) return 'B';
+        if (achievement >= 60) return 'C';
+        return 'D';
+    }
+
+    // Render Ranking Table
+    function renderRankingTable(employees) {
+        const tbody = document.getElementById('rankingBody');
+        tbody.innerHTML = '';
+
+        employees.forEach((emp, index) => {
+            const row = `
+                <tr>
+                    <td><strong>#${index + 1}</strong></td>
+                    <td style="text-align:left"><strong>${emp.name}</strong></td>
+                    <td>${emp.department}</td>
+                    <td><span class="con">${emp.overallScore}%</span></td>
+                    <td><strong style="font-size:16px;color:#34d399">${emp.grade}</strong></td>
+                </tr>
+            `;
+            tbody.innerHTML += row;
+        });
+    }
+
+    // Render Grade Distribution
+    function renderGradeDistribution(employees) {
+        const grades = { S: 0, A: 0, B: 0, C: 0, D: 0 };
+        
+        employees.forEach(emp => {
+            grades[emp.grade]++;
+        });
+
+        document.getElementById('countS').textContent = grades.S;
+        document.getElementById('countA').textContent = grades.A;
+        document.getElementById('countB').textContent = grades.B;
+        document.getElementById('countC').textContent = grades.C;
+        document.getElementById('countD').textContent = grades.D;
+    }
+
+    // Populate Employee Filter
+    function populateEmployeeFilter(employees) {
+        const select = document.getElementById('employeeFilter');
+        select.innerHTML = '<option value="">Select Employee to View KPI Details...</option>';
+        
+        employees.forEach(emp => {
+            const option = document.createElement('option');
+            option.value = emp.ID;
+            option.textContent = emp.Name;
+            select.appendChild(option);
+        });
+    }
+
+    // Filter by Employee
+    function filterByEmployee() {
+        const empId = document.getElementById('employeeFilter').value;
+        
+        if (!empId) {
+            document.getElementById('kpiBody').innerHTML = '<tr><td colspan="6" class="empty">Select an employee to view KPI details</td></tr>';
+            return;
+        }
+
+        const kpis = window.currentKPIs.filter(k => k.EmpID === parseInt(empId) || k.EmployeeID === parseInt(empId));
+        const tbody = document.getElementById('kpiBody');
+        tbody.innerHTML = '';
+
+        if (kpis.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="6" class="empty">No KPI data available for this employee</td></tr>';
+            return;
+        }
+
+        kpis.forEach(kpi => {
+            const row = `
+                <tr>
+                    <td style="text-align:left"><strong>${kpi.KPI || 'N/A'}</strong><br><span class="con">${kpi.Description || ''}</span></td>
+                    <td>${kpi.FY_Plan || '-'}</td>
+                    <td>${kpi.H1_Plan || '-'}</td>
+                    <td>${kpi.Actual || '-'}</td>
+                    <td><span class="con"><strong>${String(kpi.Achievement || '0').replace('%', '')}%</strong></span></td>
+                    <td><strong style="font-size:16px;color:#34d399">${kpi.Grade || '-'}</strong></td>
+                </tr>
+            `;
+            tbody.innerHTML += row;
+        });
+    }
+
+    // Show Refresh Status
+    function showRefreshStatus(message, type) {
+        const statusDiv = document.getElementById('refreshStatus');
+        statusDiv.innerHTML = `<div class="refresh-status ${type === 'error' ? 'error' : ''}">${message}</div>`;
+        statusDiv.style.display = 'block';
+    }
+
+    // Update Status Badge
+    function updateStatusBadge() {
+        const data = localStorage.getItem('kpiData');
+        const badge = document.getElementById('statusBadge');
+        
+        if (data && data !== '{}') {
+            badge.textContent = '✓ Data Loaded';
+            badge.classList.remove('error');
+        } else {
+            badge.textContent = '⚠ No Data';
+            badge.classList.add('error');
+        }
+    }
+
+    // Initialize on page load
+    window.onload = initializePage;
+</script>
+
+</body>
+</html>
