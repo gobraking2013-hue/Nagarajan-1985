@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/>
+<title>MM1-MH H1 Micro KPI Performance Report - Admin Refresh</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#06131d;color:#eaf2f8;font-family:Arial,Helvetica,sans-serif}
+.app{max-width:1500px;margin:auto}
+.topbar{position:sticky;top:0;z-index:100;background:#071827;border-bottom:1px solid #27475c;padding:9px 14px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.topbar b{font-size:15px}
+.btn{border:1px solid #38bdf8;background:#0b2a3e;color:#eaf2f8;border-radius:7px;padding:8px 12px;font-weight:800;cursor:pointer}
+.btn.green{border-color:#34d399;background:#0d3a26}
+.btn.danger{border-color:#ef4444;background:#3a0d0d}
+.btn:hover{opacity:0.8}
+header{padding:22px 18px 16px;border-bottom:1px solid #203746}
+.eyebrow{font-size:14px;color:#38bdf8;font-weight:800;letter-spacing:1.4px}
+.title{font-size:36px;font-weight:900;margin:5px 0}
+main{padding:14px 16px 30px}
+.panel{background:#081924;border:1px solid #203c4d;border-radius:12px;margin-bottom:14px;overflow:hidden}
+.panelhead{padding:11px 14px;border-bottom:1px solid #203c4d;display:flex;justify-content:space-between;align-items:center}
+.panelhead b{font-size:14px}
+.controls{padding:12px 14px;display:flex;gap:9px;flex-wrap:wrap;align-items:center}
+.controls input,.controls select{background:#06131d;color:#eaf2f8;border:1px solid #31546a;border-radius:7px;padding:9px 10px;min-width:200px}
+.personhead{display:grid;grid-template-columns:2.3fr 1fr 1fr 1fr;gap:10px;padding:14px}
+.personbox{border:1px solid #284657;border-radius:9px;padding:10px;background:#071720}
+.personname{font-size:20px;font-weight:800;color:#38bdf8;margin:0 0 5px}
+.meta{font-size:11px;color:#7890a1}
+.score{font-size:24px;font-weight:800;color:#34d399;text-align:center}
+.kpi-table{width:100%;border-collapse:collapse;min-width:930px}
+.kpi-table th{background:#17365d;color:#fff;padding:8px;text-align:center;font-size:12px;font-weight:800}
+.kpi-table td{border:1px solid #294553;padding:8px;text-align:center;font-size:12px}
+.kpi-table .param{text-align:left;font-weight:800;min-width:330px}
+.tablewrap{overflow:auto;padding:12px}
+.empty{padding:25px 14px;color:#7890a1;text-align:center}
+footer{padding:14px 16px 25px;color:#667f90;font-size:10px}
+
+/* ADMIN PANEL STYLES */
+.admin-section{background:#0d2a38;border:1px solid #2d6a85;border-radius:8px;padding:15px;margin-bottom:15px}
+.admin-section h3{margin:0 0 12px;color:#38bdf8;font-size:14px;font-weight:800}
+.admin-controls{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.file-input{display:none}
+.upload-status{font-size:11px;color:#7890a1;margin-top:8px}
+.upload-status.success{color:#34d399}
+.upload-status.error{color:#ef4444}
+.refresh-btn{background:#34d399;border-color:#34d399;color:#06131d;font-weight:900}
+.refresh-btn:hover{opacity:0.9}
+.last-update{font-size:11px;color:#7890a1;padding:8px;background:#071720;border-radius:5px;margin-top:8px}
+
+@media(max-width:760px){
+.title{font-size:23px}
+.personhead{grid-template-columns:1fr}
+.admin-controls{flex-direction:column}
+.admin-controls .btn{width:100%}
+.controls{flex-direction:column}
+.controls input{width:100%}
+}
+
+@media print{
+.topbar,.admin-section,.controls{display:none!important}
+}
+</style>
+<script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
+</head>
+<body>
+
+<div class="app" id="mainApp">
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <b>MM1-MH H1 Micro KPI Performance Report</b>
+    <span id="userStatus" style="font-size:12px;color:#38bdf8;flex:1;text-align:right;margin-right:10px;"></span>
+    <button class="btn danger" onclick="logout()" style="padding:6px 10px;font-size:11px;">Logout</button>
+  </div>
+
+  <!-- HEADER -->
+  <header>
+    <div class="eyebrow">H1 2026 PERFORMANCE DASHBOARD</div>
+    <div class="title">Micro KPI Report</div>
+  </header>
+
+  <!-- ADMIN PANEL -->
+  <main>
+    <div class="admin-section" id="adminPanelContainer" style="display:none;">
+      <h3>📊 Admin Control Panel - Data Refresh</h3>
+      
+      <div class="admin-controls">
+        <button class="btn green" onclick="document.getElementById('excelFile').click()">📁 Upload Excel</button>
+        <button class="btn refresh-btn" id="refreshBtn" onclick="refreshDataFromLoaded()" disabled>🔄 Refresh Data</button>
+        <input type="file" id="excelFile" class="file-input" accept=".xlsx,.xls" onchange="handleExcelUpload(event)">
+      </div>
+      
+      <div class="upload-status" id="uploadStatus"></div>
+      <div class="last-update" id="lastUpdateInfo">Last Updated: Never</div>
+    </div>
+
+    <!-- EMPLOYEES GRID -->
+    <div class="panel">
+      <div class="panelhead">
+        <b>All Employees Performance Summary</b>
+        <span id="employeeCount" style="font-size:11px;color:#7890a1;"></span>
+      </div>
+      <div id="employeesList" class="personhead"></div>
+      <div id="emptyState" class="empty" style="display:none;">No employee data available. Please upload Excel file.</div>
+    </div>
+
+    <!-- KPI DETAILS TABLE -->
+    <div class="panel" id="kpiPanel" style="display:none;">
+      <div class="panelhead">
+        <b>KPI Details</b>
+      </div>
+      <div class="tablewrap">
+        <table class="kpi-table">
+          <thead>
+            <tr>
+              <th>Employee</th>
+              <th>KPI Parameter</th>
+              <th>FY Plan</th>
+              <th>H1 Plan</th>
+              <th>Actual</th>
+              <th>Achievement %</th>
+              <th>Grade</th>
+            </tr>
+          </thead>
+          <tbody id="kpiTableBody">
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    MM1-MH KPI Report | Last Updated: <span id="lastUpdate">-</span><br>
+    Data Source: Admin Excel Upload | Version: 2.1 (Refresh Enabled) | © 2026
+  </footer>
+</div>
+
+<script>
+// ========== DATA MANAGEMENT ==========
+let adminData = {
+  employees: [],
+  kpiData: {},
+  lastUpdate: 'Never'
+};
+
+const VALID_CREDENTIALS = {
+  'admin': '12345',
+  'manager': 'pass123'
+};
+
+// ========== LOGIN FUNCTIONS ==========
+window.addEventListener('load', function() {
+  const user = sessionStorage.getItem('adminUser');
+  if (user) {
+    initializeApp();
+  } else {
+    showLoginModal();
+  }
+});
+
+function showLoginModal() {
+  const loginHTML = `
+    <div style="position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.8);display:flex;align-items:center;justify-content:center;z-index:1000;">
+      <div style="background:#0a2535;border:1px solid #2d6a85;border-radius:12px;padding:30px;min-width:320px;box-shadow:0 10px 40px rgba(0,0,0,0.5);">
+        <h2 style="color:#38bdf8;margin-top:0;font-size:22px;">🔐 Admin Login</h2>
+        <div style="margin-bottom:15px;">
+          <label style="display:block;color:#adc9d8;font-size:12px;margin-bottom:5px;font-weight:800;">User ID</label>
+          <input type="text" id="adminId" placeholder="Enter Admin ID" style="width:100%;padding:10px;background:#061320;border:1px solid #2d6a85;border-radius:5px;color:#eaf2f8;font-size:13px;font-family:Arial,sans-serif;">
+        </div>
+        <div style="margin-bottom:15px;">
+          <label style="display:block;color:#adc9d8;font-size:12px;margin-bottom:5px;font-weight:800;">Password</label>
+          <input type="password" id="adminPassword" placeholder="Enter Password" style="width:100%;padding:10px;background:#061320;border:1px solid #2d6a85;border-radius:5px;color:#eaf2f8;font-size:13px;font-family:Arial,sans-serif;">
+        </div>
+        <div id="loginError" style="color:#ef4444;font-size:11px;margin-bottom:10px;"></div>
+        <div style="display:flex;gap:10px;">
+          <button onclick="adminLogin()" style="flex:1;padding:10px;background:#34d399;border:none;border-radius:5px;color:#06131d;font-weight:800;cursor:pointer;">Login</button>
+          <button onclick="guestView()" style="flex:1;padding:10px;background:#38bdf8;border:none;border-radius:5px;color:#06131d;font-weight:800;cursor:pointer;">Guest View</button>
+        </div>
+        <p style="margin-top:15px;color:#7890a1;font-size:11px;">Demo: ID=admin, Pass=12345</p>
+      </div>
+    </div>
+  `;
+  document.body.insertAdjacentHTML('afterbegin', loginHTML);
+}
+
+function adminLogin() {
+  const id = document.getElementById('adminId').value.trim();
+  const pass = document.getElementById('adminPassword').value;
+  
+  if (!id || !pass) {
+    document.getElementById('loginError').textContent = 'Please enter ID and Password';
+    return;
+  }
+  
+  if (VALID_CREDENTIALS[id] && VALID_CREDENTIALS[id] === pass) {
+    sessionStorage.setItem('adminUser', id);
+    sessionStorage.setItem('isAdmin', 'true');
+    document.querySelector('[style*="position:fixed"]').remove();
+    initializeApp();
+  } else {
+    document.getElementById('loginError').textContent = 'Invalid credentials. Try admin/12345';
+  }
+}
+
+function guestView() {
+  sessionStorage.setItem('adminUser', 'guest');
+  sessionStorage.setItem('isAdmin', 'false');
+  document.querySelector('[style*="position:fixed"]').remove();
+  initializeApp();
+}
+
+function logout() {
+  sessionStorage.clear();
+  localStorage.removeItem('kpiData');
+  location.reload();
+}
+
+// ========== APP INITIALIZATION ==========
+function initializeApp() {
+  const user = sessionStorage.getItem('adminUser');
+  const isAdmin = sessionStorage.getItem('isAdmin') === 'true';
+  
+  document.getElementById('mainApp').style.display = 'block';
+  document.getElementById('userStatus').textContent = `👤 ${user.toUpperCase()} ${isAdmin ? '(Admin)' : '(Guest)'}`;
+  
+  // Show admin panel only for admin
+  document.getElementById('adminPanelContainer').style.display = isAdmin ? 'block' : 'none';
+  
+  // Load saved data
+  loadStoredData();
+  displayEmployees();
+}
+
+// ========== EXCEL UPLOAD & PROCESSING ==========
+function handleExcelUpload(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const data = new Uint8Array(e.target.result);
+      const workbook = XLSX.read(data, {type: 'array'});
+      
+      // Read Employee Master sheet
+      const empSheet = workbook.Sheets[workbook.SheetNames[0]];
+      const employees = XLSX.utils.sheet_to_json(empSheet);
+      
+      // Read KPI Input sheet if exists
+      let kpiData = {};
+      if (workbook.SheetNames[1]) {
+        const kpiSheet = workbook.Sheets[workbook.SheetNames[1]];
+        const kpiRows = XLSX.utils.sheet_to_json(kpiSheet);
+        kpiRows.forEach(row => {
+          const empId = row.EmployeeID || row.ID || row.EmpID;
+          if (!kpiData[empId]) kpiData[empId] = [];
+          kpiData[empId].push(row);
+        });
+      }
+      
+      adminData.employees = employees;
+      adminData.kpiData = kpiData;
+      adminData.lastUpdate = new Date().toLocaleString();
+      
+      // Save to localStorage
+      saveStoredData();
+      
+      // Enable refresh button
+      document.getElementById('refreshBtn').disabled = false;
+      
+      showStatus(`✅ Excel loaded: ${employees.length} employees found`, 'success');
+      updateLastUpdate();
+      
+    } catch (error) {
+      showStatus(`❌ Error: ${error.message}`, 'error');
+    }
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+// ========== REFRESH FUNCTION ==========
+function refreshDataFromLoaded() {
+  if (adminData.employees.length === 0) {
+    showStatus('❌ No data loaded. Please upload Excel first', 'error');
+    return;
+  }
+  
+  // Reload from localStorage
+  loadStoredData();
+  
+  // Re-render UI without page reload
+  displayEmployees();
+  displayKPITable();
+  
+  showStatus('✅ Data refreshed successfully', 'success');
+  updateLastUpdate();
+}
+
+// ========== DATA PERSISTENCE ==========
+function saveStoredData() {
+  localStorage.setItem('kpiData', JSON.stringify(adminData));
+}
+
+function loadStoredData() {
+  const stored = localStorage.getItem('kpiData');
+  if (stored) {
+    adminData = JSON.parse(stored);
+  }
+}
+
+// ========== DISPLAY FUNCTIONS ==========
+function displayEmployees() {
+  const list = document.getElementById('employeesList');
+  const count = document.getElementById('employeeCount');
+  const empty = document.getElementById('emptyState');
+  
+  if (!adminData.employees || adminData.employees.length === 0) {
+    list.innerHTML = '';
+    empty.style.display = 'block';
+    count.textContent = '(0)';
+    return;
+  }
+  
+  empty.style.display = 'none';
+  count.textContent = `(${adminData.employees.length})`;
+  
+  list.innerHTML = adminData.employees.map(emp => {
+    const empId = emp.EmployeeID || emp.ID || emp.EmpID;
+    const empKpis = adminData.kpiData[empId] || [];
+    
+    // Calculate overall score
+    let totalAchievement = 0;
+    if (empKpis.length > 0) {
+      empKpis.forEach(kpi => {
+        const ach = parseFloat(kpi.Achievement) || 0;
+        totalAchievement += ach;
+      });
+      totalAchievement = Math.round(totalAchievement / empKpis.length);
+    }
+    
+    return `
+      <div class="personbox">
+        <div class="personname">${emp.Name || emp.EmployeeName || 'N/A'}</div>
+        <div class="meta">ID: ${empId} | Dept: ${emp.Department || 'N/A'}</div>
+        <div class="score">${totalAchievement}%</div>
+      </div>
+    `;
+  }).join('');
+  
+  displayKPITable();
+}
+
+function displayKPITable() {
+  const tbody = document.getElementById('kpiTableBody');
+  const panel = document.getElementById('kpiPanel');
+  
+  if (!adminData.employees || adminData.employees.length === 0) {
+    panel.style.display = 'none';
+    return;
+  }
+  
+  panel.style.display = 'block';
+  
+  let rows = '';
+  adminData.employees.forEach(emp => {
+    const empId = emp.EmployeeID || emp.ID || emp.EmpID;
+    const empKpis = adminData.kpiData[empId] || [];
+    
+    if (empKpis.length === 0) return;
+    
+    empKpis.forEach(kpi => {
+      rows += `
+        <tr>
+          <td>${emp.Name || emp.EmployeeName || 'N/A'}</td>
+          <td class="param">${kpi.KPI || kpi.KPIParameter || 'N/A'}</td>
+          <td>${kpi.FY_Plan || kpi['FY Plan'] || '-'}</td>
+          <td>${kpi.H1_Plan || kpi['H1 Plan'] || '-'}</td>
+          <td>${kpi.Actual || '-'}</td>
+          <td>${kpi.Achievement || '-'}</td>
+          <td style="font-weight:900;color:#34d399;">${kpi.Grade || '-'}</td>
+        </tr>
+      `;
+    });
+  });
+  
+  tbody.innerHTML = rows || '<tr><td colspan="7" style="text-align:center;color:#7890a1;">No KPI data available</td></tr>';
+}
+
+// ========== UTILITY FUNCTIONS ==========
+function showStatus(msg, type) {
+  const status = document.getElementById('uploadStatus');
+  status.textContent = msg;
+  status.className = 'upload-status ' + type;
+  if (type === 'success') setTimeout(() => { status.textContent = ''; }, 4000);
+}
+
+function updateLastUpdate() {
+  document.getElementById('lastUpdateInfo').textContent = `Last Updated: ${adminData.lastUpdate}`;
+  document.getElementById('lastUpdate').textContent = adminData.lastUpdate;
+}
+</script>
+
+</body>
+</html>
