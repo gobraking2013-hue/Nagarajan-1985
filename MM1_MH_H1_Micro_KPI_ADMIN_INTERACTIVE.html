@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/>
+<title>MM1-MH H1 Micro KPI Performance Report - Admin</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#06131d;color:#eaf2f8;font-family:Arial,Helvetica,sans-serif}
+.app{max-width:1500px;margin:auto}
+.topbar{position:sticky;top:0;z-index:100;background:#071827;border-bottom:1px solid #27475c;padding:9px 14px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.topbar b{font-size:15px}
+.btn,.filelabel{border:1px solid #38bdf8;background:#0b2a3e;color:#eaf2f8;border-radius:7px;padding:8px 12px;font-weight:800;cursor:pointer;font-size:12px}
+.btn:hover{background:#0d3a4a}
+.btn.green{border-color:#34d399;background:#0d4a2e}
+.btn.green:hover{background:#0f5d38}
+.btn.danger{border-color:#f87171;background:#4a1a1a}
+.btn.danger:hover{background:#5a2020}
+header{padding:22px 18px 16px;border-bottom:1px solid #203746}
+.eyebrow{font-size:14px;color:#38bdf8;font-weight:800;letter-spacing:1.4px}
+.title{font-size:36px;font-weight:900;margin:5px 0}
+.subtitle{font-size:13px;color:#b3c1ca;margin:0}
+main{padding:14px 16px 30px}
+.panel{background:#081924;border:1px solid #203c4d;border-radius:12px;margin-bottom:14px;overflow:hidden}
+.panelhead{padding:11px 14px;border-bottom:1px solid #203c4d;display:flex;justify-content:space-between;align-items:center}
+.panelhead b{font-size:13px;color:#38bdf8;font-weight:800}
+.controls{padding:12px 14px;display:flex;gap:9px;flex-wrap:wrap}
+.controls input,.controls select{background:#06131d;color:#eaf2f8;border:1px solid #31546a;border-radius:7px;padding:9px 10px;min-width:120px;font-size:12px}
+.tablewrap{overflow:auto}
+.grade-table,.kpi-table{width:100%;border-collapse:collapse;min-width:720px}
+.grade-table th,.grade-table td,.kpi-table th,.kpi-table td{border:1px solid #294553;padding:8px 7px;text-align:center;font-size:12px}
+.grade-table th,.kpi-table th{background:#17365d;color:#fff;font-weight:800}
+.grade-table td,.kpi-table td{background:#081924;color:#d0d8df}
+.personhead{display:grid;grid-template-columns:2.3fr 1fr 1fr 1fr;gap:10px;padding:14px}
+.personbox{border:1px solid #284657;border-radius:9px;padding:10px;background:#071720}
+.personname{font-size:20px;font-weight:900;color:#eaf2f8}
+.score{font-size:24px;font-weight:900;color:#38bdf8;margin:5px 0}
+.meta{font-size:11px;color:#7890a1}
+.empty{padding:25px 14px;color:#7890a1;text-align:center}
+footer{padding:14px 16px 25px;color:#667f90;font-size:10px}
+
+/* LOGIN MODAL */
+.login-modal{display:flex;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.7);z-index:1000;align-items:center;justify-content:center;visibility:hidden;opacity:0;transition:all 0.3s}
+.login-modal.active{visibility:visible;opacity:1}
+.login-box{background:#0a2535;border:1px solid #2d6a85;border-radius:12px;padding:30px;min-width:320px;box-shadow:0 10px 40px rgba(0,0,0,0.5)}
+.login-box h2{color:#38bdf8;margin-top:0;font-size:22px}
+.login-box .form-group{margin-bottom:15px}
+.login-box label{display:block;color:#adc9d8;font-size:12px;margin-bottom:5px;font-weight:800}
+.login-box input{width:100%;padding:10px;background:#061320;border:1px solid #2d6a85;border-radius:5px;color:#eaf2f8;font-size:13px;font-family:Arial,sans-serif}
+.login-box .btn-group{display:flex;gap:10px}
+.login-box .btn{flex:1;text-align:center}
+.login-error{color:#ef4444;font-size:11px;margin-top:5px}
+
+/* ADMIN PANEL */
+.admin-panel{background:#0d2a38;border:1px solid #2d6a85;border-radius:8px;padding:15px;margin-bottom:20px}
+.admin-panel h3{margin:0 0 15px 0;color:#38bdf8;font-size:14px;font-weight:800}
+.admin-controls{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.file-input{display:none}
+.upload-info{font-size:11px;color:#7890a1}
+.upload-info.success{color:#34d399}
+.upload-info.error{color:#ef4444}
+
+@media(max-width:760px){
+.title{font-size:23px}
+.personhead{grid-template-columns:1fr}
+.login-box{min-width:90%;max-width:320px}
+.admin-controls{flex-direction:column}
+.admin-controls .btn{width:100%}
+}
+
+@media print{
+.topbar,.admin-panel,.controls{display:none!important}
+}
+</style>
+<script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
+</head>
+<body>
+
+<!-- LOGIN MODAL -->
+<div class="login-modal" id="loginModal">
+  <div class="login-box">
+    <h2>Admin Login</h2>
+    <div class="form-group">
+      <label>User ID</label>
+      <input type="text" id="adminId" placeholder="Enter Admin ID" autocomplete="off">
+    </div>
+    <div class="form-group">
+      <label>Password</label>
+      <input type="password" id="adminPassword" placeholder="Enter Password" autocomplete="off">
+    </div>
+    <div id="loginError" class="login-error"></div>
+    <div class="btn-group">
+      <button class="btn green" onclick="adminLogin()">Login</button>
+      <button class="btn" onclick="guestView()">Guest View</button>
+    </div>
+    <p style="margin-top:15px;color:#7890a1;font-size:11px;">
+      Demo: ID=admin, Pass=12345<br>
+      Or use Guest View for read-only access
+    </p>
+  </div>
+</div>
+
+<div class="app" id="mainApp" style="display:none;">
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <b>MM1-MH H1 Micro KPI Performance Report</b>
+    <span id="userStatus" style="font-size:12px;color:#38bdf8;flex:1;text-align:right;margin-right:10px;"></span>
+    <button class="btn danger" onclick="logout()" style="padding:6px 10px;font-size:11px;">Logout</button>
+  </div>
+
+  <!-- HEADER -->
+  <header>
+    <div class="eyebrow">Performance Management System</div>
+    <h1 class="title">H1 Micro KPI Dashboard</h1>
+    <p class="subtitle">Real-time performance tracking and analytics</p>
+  </header>
+
+  <!-- ADMIN PANEL (Only for Admin Users) -->
+  <main>
+    <div id="adminPanelContainer" style="display:none;">
+      <div class="admin-panel">
+        <h3>📊 Admin Control Panel</h3>
+        <div class="admin-controls">
+          <label class="btn green" style="cursor:pointer;margin:0;">
+            📁 Upload Excel
+            <input type="file" id="excelFile" class="file-input" accept=".xlsx,.xls" onchange="handleExcelUpload(event)">
+          </label>
+          <button class="btn green" onclick="refreshData()">🔄 Refresh Data</button>
+          <button class="btn" onclick="exportData()">📥 Export JSON</button>
+          <div class="upload-info" id="uploadStatus"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- EMPLOYEES GRID -->
+    <div class="panel">
+      <div class="panelhead">
+        <b>All Employees Performance Summary</b>
+        <span id="employeeCount" style="font-size:11px;color:#7890a1;"></span>
+      </div>
+      <div id="employeesList" class="personhead"></div>
+      <div id="emptyState" class="empty" style="display:none;">No employee data available. Please upload Excel file.</div>
+    </div>
+
+  </main>
+
+  <footer>
+    MM1-MH KPI Report | Last Updated: <span id="lastUpdate">-</span><br>
+    Data Source: Admin Excel Upload | Version: 2.0 | © 2026
+  </footer>
+</div>
+
+<script>
+// ========== DATA MANAGEMENT ==========
+let adminData = {
+  employees: [],
+  kpiData: {},
+  lastUpdate: new Date().toLocaleString()
+};
+
+const VALID_CREDENTIALS = {
+  'admin': '12345',
+  'manager': 'pass123'
+};
+
+// ========== LOGIN FUNCTIONS ==========
+function showLoginModal() {
+  document.getElementById('loginModal').classList.add('active');
+}
+
+function adminLogin() {
+  const id = document.getElementById('adminId').value.trim();
+  const pass = document.getElementById('adminPassword').value;
+  
+  if (!id || !pass) {
+    showError('Please enter ID and Password');
+    return;
+  }
+  
+  if (VALID_CREDENTIALS[id] && VALID_CREDENTIALS[id] === pass) {
+    sessionStorage.setItem('adminUser', id);
+    sessionStorage.setItem('isAdmin', 'true');
+    closeLogin();
+    initializeApp();
+  } else {
+    showError('Invalid credentials. Try admin/12345');
+  }
+}
+
+function guestView() {
+  sessionStorage.setItem('adminUser', 'guest');
+  sessionStorage.setItem('isAdmin', 'false');
+  closeLogin();
+  initializeApp();
+}
+
+function closeLogin() {
+  document.getElementById('loginModal').classList.remove('active');
+}
+
+function showError(msg) {
+  document.getElementById('loginError').textContent = msg;
+}
+
+function logout() {
+  sessionStorage.clear();
+  localStorage.removeItem('kpiData');
+  location.reload();
+}
+
+// ========== APP INITIALIZATION ==========
+function initializeApp() {
+  const user = sessionStorage.getItem('adminUser');
+  const isAdmin = sessionStorage.getItem('isAdmin') === 'true';
+  
+  document.getElementById('mainApp').style.display = 'block';
+  document.getElementById('loginModal').style.display = 'none';
+  document.getElementById('userStatus').textContent = `👤 ${user.toUpperCase()}`;
+  
+  // Show admin panel only for admin
+  document.getElementById('adminPanelContainer').style.display = isAdmin ? 'block' : 'none';
+  
+  // Load saved data
+  loadStoredData();
+  displayEmployees();
+}
+
+// ========== EXCEL UPLOAD & PROCESSING ==========
+function handleExcelUpload(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const data = new Uint8Array(e.target.result);
+      const workbook = XLSX.read(data, {type: 'array'});
+      
+      // Read Employee Master sheet
+      const empSheet = workbook.Sheets[workbook.SheetNames[0]];
+      const employees = XLSX.utils.sheet_to_json(empSheet);
+      
+      // Read KPI Input sheet if exists
+      let kpiData = {};
+      if (workbook.SheetNames[1]) {
+        const kpiSheet = workbook.Sheets[workbook.SheetNames[1]];
+        const kpiRows = XLSX.utils.sheet_to_json(kpiSheet);
+        kpiRows.forEach(row => {
+          kpiData[row.EmployeeID || row.ID] = row;
+        });
+      }
+      
+      adminData.employees = employees;
+      adminData.kpiData = kpiData;
+      adminData.lastUpdate = new Date().toLocaleString();
+      
+      // Save to localStorage
+      saveStoredData();
+      
+      displayEmployees();
+      showStatus('✅ Excel uploaded successfully! ' + employees.length + ' employees loaded.', 'success');
+      
+      // Clear file input
+      document.getElementById('excelFile').value = '';
+    } catch (error) {
+      showStatus('❌ Error reading Excel: ' + error.message, 'error');
+    }
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+function refreshData() {
+  if (adminData.employees.length === 0) {
+    showStatus('⚠️ No data to refresh. Upload Excel first.', 'error');
+    return;
+  }
+  displayEmployees();
+  showStatus('✅ Data refreshed at ' + new Date().toLocaleTimeString(), 'success');
+}
+
+function displayEmployees() {
+  const container = document.getElementById('employeesList');
+  const emptyState = document.getElementById('emptyState');
+  const count = document.getElementById('employeeCount');
+  const lastUpdate = document.getElementById('lastUpdate');
+  
+  if (adminData.employees.length === 0) {
+    container.innerHTML = '';
+    emptyState.style.display = 'block';
+    count.textContent = '(0 employees)';
+    return;
+  }
+  
+  emptyState.style.display = 'none';
+  count.textContent = '(' + adminData.employees.length + ' employees)';
+  lastUpdate.textContent = adminData.lastUpdate;
+  
+  container.innerHTML = adminData.employees.map((emp, idx) => {
+    const kpi = adminData.kpiData[emp.ID || emp.EmployeeID] || {};
+    const achievement = kpi.Achievement || kpi['Achievement %'] || '-';
+    const grade = kpi.Grade || kpi.FinalGrade || '-';
+    
+    return `
+      <div class="personbox" style="border-left:3px solid #${getGradeColor(grade)};">
+        <div class="personname">${emp.Name || emp.EmployeeName || 'N/A'}</div>
+        <div class="meta">ID: ${emp.ID || emp.EmployeeID || '-'} | Dept: ${emp.Department || '-'}</div>
+        <div style="margin:8px 0;font-size:13px;color:#d0d8df;">
+          <div>Achievement: <strong>${achievement}%</strong></div>
+          <div>Grade: <strong style="color:#${getGradeColor(grade)}">${grade}</strong></div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function getGradeColor(grade) {
+  const colors = {
+    'S': 'FF4FA3', 'A': '32D583', 'B': '00A8E8',
+    'C': 'FF9D4A', 'D': 'FF304F'
+  };
+  return colors[grade] || '38bdf8';
+}
+
+// ========== DATA STORAGE ==========
+function saveStoredData() {
+  localStorage.setItem('kpiData', JSON.stringify(adminData));
+}
+
+function loadStoredData() {
+  const stored = localStorage.getItem('kpiData');
+  if (stored) {
+    try {
+      adminData = JSON.parse(stored);
+    } catch (e) {
+      console.log('Could not load stored data');
+    }
+  }
+}
+
+// ========== EXPORT & UTILITY ==========
+function exportData() {
+  const json = JSON.stringify(adminData, null, 2);
+  const blob = new Blob([json], {type: 'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'kpi_data_' + new Date().toISOString().slice(0,10) + '.json';
+  a.click();
+  showStatus('✅ Data exported as JSON', 'success');
+}
+
+function showStatus(msg, type) {
+  const status = document.getElementById('uploadStatus');
+  status.textContent = msg;
+  status.className = 'upload-info ' + type;
+  if (type === 'success') setTimeout(() => { status.textContent = ''; }, 4000);
+}
+
+// ========== INITIALIZATION ==========
+window.addEventListener('load', function() {
+  const user = sessionStorage.getItem('adminUser');
+  if (user) {
+    initializeApp();
+  } else {
+    showLoginModal();
+  }
+});
+</script>
+
+</body>
+</html>
