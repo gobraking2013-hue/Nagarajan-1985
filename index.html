@@ -1,408 +1,402 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8"/>
-    <meta content="width=device-width,initial-scale=1" name="viewport"/>
-    <meta name="mm1-source-of-truth" content="Admin Excel / Employee_Master + KPI_Input">
-    <meta name="mm1-comments-rule" content="Exactly 3 evaluator bullet comments; PDF single-line, display fully readable; no repeated KPI ratio or Good job text">
-    <meta name="mm1-refresh-status" content="V85 final tested from Admin-source Excel formulas; Admin/Excel source-of-truth; final interlinked build">
-    <title>MM1-MH H1 Micro KPI Performance Report</title>
-    <style>
-        *{box-sizing:border-box}
-        body{margin:0;background:#06131d;color:#eaf2f8;font-family:Arial,Helvetica,sans-serif}
-        .app{max-width:1500px;margin:auto}
-        .topbar{position:sticky;top:0;z-index:100;background:#071827;border-bottom:1px solid #27475c;padding:9px 14px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:space-between}
-        .topbar b{font-size:15px}
-        .topbar-right{display:flex;gap:15px;align-items:center}
-        .topbar a,.btn,.filelabel{border:1px solid #38bdf8;background:#0b2a3e;color:#eaf2f8;border-radius:7px;padding:8px 12px;font-weight:800;cursor:pointer;text-decoration:none;font-size:12px;transition:all 0.3s;white-space:nowrap}
-        .topbar a:hover,.btn:hover{background:#0f3a4e;box-shadow:0 0 8px rgba(56,189,248,0.3)}
-        .btn.admin{border-color:#34d399;color:#34d399}
-        .btn.admin:hover{background:#0a3d2c;box-shadow:0 0 8px rgba(52,211,153,0.3)}
-        .btn.green{border-color:#34d399}
-        .status-badge{display:inline-block;padding:6px 12px;border-radius:20px;font-size:11px;font-weight:700;background:#0a3d2c;color:#34d399;border:1px solid #34d399}
-        .status-badge.error{background:#3a1a1a;color:#ef4444;border-color:#ef4444}
-        header{padding:22px 18px 16px;border-bottom:1px solid #203746}
-        .eyebrow{font-size:14px;color:#38bdf8;font-weight:800;letter-spacing:1.4px}
-        .title{font-size:36px;font-weight:900;margin:5px 0}
-        .subtitle{font-size:13px;color:#7890a1;margin-top:4px}
-        main{padding:14px 16px 30px}
-        .panel{background:#081924;border:1px solid #203c4d;border-radius:12px;margin-bottom:14px;overflow:hidden}
-        .panelhead{padding:11px 14px;border-bottom:1px solid #203c4d;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;background:#0a2a35}
-        .panelhead .cap{font-size:13px;color:#38bdf8;font-weight:800;text-transform:uppercase;letter-spacing:0.5px}
-        .panelhead .muted{font-size:12px;color:#7890a1}
-        .controls{padding:12px 14px;display:flex;gap:9px;flex-wrap:wrap}
-        .controls input,.controls select{background:#06131d;color:#eaf2f8;border:1px solid #31546a;border-radius:7px;padding:9px 10px;min-width:200px;font-size:12px}
-        .alloc{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;padding:12px 14px}
-        .alloccard{border:1px solid #27475a;background:#071720;border-radius:9px;padding:10px;text-align:center}
-        .alloccard .g{font-size:32px;color:#38bdf8;margin-bottom:4px}
-        .alloccard strong{font-size:11px;color:#7890a1;display:block}
-        .summary{padding:0 14px 14px}
-        .cathead{display:flex;justify-content:space-between;align-items:center;margin:4px 0 7px}
-        .cathead strong{font-size:14px}
-        .gradegrid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
-        .gradecard{background:#071720;border:1px solid #27475a;border-radius:9px;padding:12px;text-align:center}
-        .gradecard b{font-size:13px;color:#7890a1}
-        .gradecard strong{font-size:24px;color:#38bdf8;display:block;margin:5px 0}
-        .gradecard span{font-size:11px;color:#7890a1}
-        .tablewrap{overflow:auto}
-        .grade-table,.kpi-table{width:100%;border-collapse:collapse;min-width:720px}
-        .grade-table th,.grade-table td,.kpi-table th,.kpi-table td{border:1px solid #294553;padding:8px 7px;text-align:center;font-size:12px}
-        .grade-table th,.kpi-table th{background:#0a2a35;color:#38bdf8;font-weight:800}
-        .grade-table td,.kpi-table td{background:#06131d;color:#eaf2f8}
-        .kpi-table{min-width:930px}
-        .kpi-table .param{text-align:left;font-weight:800;min-width:330px}
-        .con{color:#38bdf8;font-size:11px;font-weight:700}
-        .empty{padding:25px 14px;color:#7890a1;text-align:center}
-        footer{padding:14px 16px 25px;color:#667f90;font-size:10px}
-        .refresh-status{padding:10px 14px;background:#0a3d2c;border:1px solid #34d399;border-radius:7px;margin-bottom:14px;color:#34d399;font-size:12px;font-weight:700}
-        .refresh-status.error{background:#3a1a1a;border-color:#ef4444;color:#ef4444}
-        @media(max-width:760px){
-            .title{font-size:23px}
-            .alloc{grid-template-columns:repeat(2,1fr)}
-            .gradegrid{grid-template-columns:repeat(2,1fr)}
-            .topbar{flex-direction:column;align-items:flex-start}
-            .topbar-right{flex-direction:column;width:100%}
-            .controls{flex-direction:column}
-            .controls select{width:100%}
-        }
-    </style>
-    <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
+<meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/>
+<title>MM1-MH H1 Micro KPI Performance Report - Admin Refresh</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#06131d;color:#eaf2f8;font-family:Arial,Helvetica,sans-serif}
+.app{max-width:1500px;margin:auto}
+.topbar{position:sticky;top:0;z-index:100;background:#071827;border-bottom:1px solid #27475c;padding:9px 14px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.topbar b{font-size:15px}
+.btn{border:1px solid #38bdf8;background:#0b2a3e;color:#eaf2f8;border-radius:7px;padding:8px 12px;font-weight:800;cursor:pointer}
+.btn.green{border-color:#34d399;background:#0d3a26}
+.btn.danger{border-color:#ef4444;background:#3a0d0d}
+.btn:hover{opacity:0.8}
+header{padding:22px 18px 16px;border-bottom:1px solid #203746}
+.eyebrow{font-size:14px;color:#38bdf8;font-weight:800;letter-spacing:1.4px}
+.title{font-size:36px;font-weight:900;margin:5px 0}
+main{padding:14px 16px 30px}
+.panel{background:#081924;border:1px solid #203c4d;border-radius:12px;margin-bottom:14px;overflow:hidden}
+.panelhead{padding:11px 14px;border-bottom:1px solid #203c4d;display:flex;justify-content:space-between;align-items:center}
+.panelhead b{font-size:14px}
+.controls{padding:12px 14px;display:flex;gap:9px;flex-wrap:wrap;align-items:center}
+.controls input,.controls select{background:#06131d;color:#eaf2f8;border:1px solid #31546a;border-radius:7px;padding:9px 10px;min-width:200px}
+.personhead{display:grid;grid-template-columns:2.3fr 1fr 1fr 1fr;gap:10px;padding:14px}
+.personbox{border:1px solid #284657;border-radius:9px;padding:10px;background:#071720}
+.personname{font-size:20px;font-weight:800;color:#38bdf8;margin:0 0 5px}
+.meta{font-size:11px;color:#7890a1}
+.score{font-size:24px;font-weight:800;color:#34d399;text-align:center}
+.kpi-table{width:100%;border-collapse:collapse;min-width:930px}
+.kpi-table th{background:#17365d;color:#fff;padding:8px;text-align:center;font-size:12px;font-weight:800}
+.kpi-table td{border:1px solid #294553;padding:8px;text-align:center;font-size:12px}
+.kpi-table .param{text-align:left;font-weight:800;min-width:330px}
+.tablewrap{overflow:auto;padding:12px}
+.empty{padding:25px 14px;color:#7890a1;text-align:center}
+footer{padding:14px 16px 25px;color:#667f90;font-size:10px}
+
+/* ADMIN PANEL STYLES */
+.admin-section{background:#0d2a38;border:1px solid #2d6a85;border-radius:8px;padding:15px;margin-bottom:15px}
+.admin-section h3{margin:0 0 12px;color:#38bdf8;font-size:14px;font-weight:800}
+.admin-controls{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.file-input{display:none}
+.upload-status{font-size:11px;color:#7890a1;margin-top:8px}
+.upload-status.success{color:#34d399}
+.upload-status.error{color:#ef4444}
+.refresh-btn{background:#34d399;border-color:#34d399;color:#06131d;font-weight:900}
+.refresh-btn:hover{opacity:0.9}
+.last-update{font-size:11px;color:#7890a1;padding:8px;background:#071720;border-radius:5px;margin-top:8px}
+
+@media(max-width:760px){
+.title{font-size:23px}
+.personhead{grid-template-columns:1fr}
+.admin-controls{flex-direction:column}
+.admin-controls .btn{width:100%}
+.controls{flex-direction:column}
+.controls input{width:100%}
+}
+
+@media print{
+.topbar,.admin-section,.controls{display:none!important}
+}
+</style>
+<script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
 </head>
 <body>
 
-<div class="app">
-    <!-- TOP BAR WITH ADMIN LINK -->
-    <div class="topbar">
-        <b>📊 MM1-MH H1 Micro KPI</b>
-        <div class="topbar-right">
-            <a href="admin.html" class="btn admin">⚙️ Admin Panel</a>
-            <span class="status-badge" id="statusBadge">Loading...</span>
-        </div>
+<div class="app" id="mainApp">
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <b>MM1-MH H1 Micro KPI Performance Report</b>
+    <span id="userStatus" style="font-size:12px;color:#38bdf8;flex:1;text-align:right;margin-right:10px;"></span>
+    <button class="btn danger" onclick="logout()" style="padding:6px 10px;font-size:11px;">Logout</button>
+  </div>
+
+  <!-- HEADER -->
+  <header>
+    <div class="eyebrow">H1 2026 PERFORMANCE DASHBOARD</div>
+    <div class="title">Micro KPI Report</div>
+  </header>
+
+  <!-- ADMIN PANEL -->
+  <main>
+    <div class="admin-section" id="adminPanelContainer" style="display:none;">
+      <h3>📊 Admin Control Panel - Data Refresh</h3>
+      
+      <div class="admin-controls">
+        <button class="btn green" onclick="document.getElementById('excelFile').click()">📁 Upload Excel</button>
+        <button class="btn refresh-btn" id="refreshBtn" onclick="refreshDataFromLoaded()" disabled>🔄 Refresh Data</button>
+        <input type="file" id="excelFile" class="file-input" accept=".xlsx,.xls" onchange="handleExcelUpload(event)">
+      </div>
+      
+      <div class="upload-status" id="uploadStatus"></div>
+      <div class="last-update" id="lastUpdateInfo">Last Updated: Never</div>
     </div>
 
-    <!-- HEADER -->
-    <header>
-        <div class="eyebrow">PERFORMANCE DASHBOARD</div>
-        <h1 class="title">MM1-MH H1 Micro KPI Performance Report</h1>
-        <p class="subtitle">Last Updated: <span id="lastUpdateTime">Never</span> | Data Status: <span id="dataStatus" style="color:#7890a1">No Data Loaded</span></p>
-    </header>
+    <!-- EMPLOYEES GRID -->
+    <div class="panel">
+      <div class="panelhead">
+        <b>All Employees Performance Summary</b>
+        <span id="employeeCount" style="font-size:11px;color:#7890a1;"></span>
+      </div>
+      <div id="employeesList" class="personhead"></div>
+      <div id="emptyState" class="empty" style="display:none;">No employee data available. Please upload Excel file.</div>
+    </div>
 
-    <!-- REFRESH STATUS -->
-    <div id="refreshStatus" style="display:none;"></div>
+    <!-- KPI DETAILS TABLE -->
+    <div class="panel" id="kpiPanel" style="display:none;">
+      <div class="panelhead">
+        <b>KPI Details</b>
+      </div>
+      <div class="tablewrap">
+        <table class="kpi-table">
+          <thead>
+            <tr>
+              <th>Employee</th>
+              <th>KPI Parameter</th>
+              <th>FY Plan</th>
+              <th>H1 Plan</th>
+              <th>Actual</th>
+              <th>Achievement %</th>
+              <th>Grade</th>
+            </tr>
+          </thead>
+          <tbody id="kpiTableBody">
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
 
-    <!-- MAIN CONTENT -->
-    <main>
-        <!-- GRADE SUMMARY PANEL -->
-        <div class="panel">
-            <div class="panelhead">
-                <div class="cap">📊 Grade Distribution</div>
-                <div class="muted">Employee Performance Summary</div>
-            </div>
-            <div class="summary">
-                <div class="alloc" id="gradeSummary">
-                    <div class="alloccard">
-                        <div class="g">S</div>
-                        <strong>Grade S: <span id="countS">0</span></strong>
-                    </div>
-                    <div class="alloccard">
-                        <div class="g">A</div>
-                        <strong>Grade A: <span id="countA">0</span></strong>
-                    </div>
-                    <div class="alloccard">
-                        <div class="g">B</div>
-                        <strong>Grade B: <span id="countB">0</span></strong>
-                    </div>
-                    <div class="alloccard">
-                        <div class="g">C</div>
-                        <strong>Grade C: <span id="countC">0</span></strong>
-                    </div>
-                    <div class="alloccard">
-                        <div class="g">D</div>
-                        <strong>Grade D: <span id="countD">0</span></strong>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- EMPLOYEE RANKING PANEL -->
-        <div class="panel">
-            <div class="panelhead">
-                <div class="cap">🏆 Employee Ranking</div>
-                <div class="muted">Based on Overall Achievement & Grades</div>
-            </div>
-            <div class="tablewrap">
-                <table class="grade-table" id="rankingTable">
-                    <thead>
-                        <tr>
-                            <th>Rank</th>
-                            <th>Employee Name</th>
-                            <th>Department</th>
-                            <th>Overall Score</th>
-                            <th>Grade</th>
-                        </tr>
-                    </thead>
-                    <tbody id="rankingBody">
-                        <tr><td colspan="5" class="empty">Loading employee data...</td></tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <!-- INDIVIDUAL KPI DETAILS PANEL -->
-        <div class="panel">
-            <div class="panelhead">
-                <div class="cap">📈 KPI Details by Employee</div>
-                <div class="muted">Performance Metrics & Achievement</div>
-            </div>
-            <div class="controls">
-                <select id="employeeFilter" onchange="filterByEmployee()" style="flex:1">
-                    <option value="">Select Employee to View KPI Details...</option>
-                </select>
-            </div>
-            <div class="tablewrap">
-                <table class="kpi-table" id="kpiTable">
-                    <thead>
-                        <tr>
-                            <th>KPI Parameter</th>
-                            <th>FY Plan</th>
-                            <th>H1 Plan</th>
-                            <th>Actual</th>
-                            <th>Achievement %</th>
-                            <th>Grade</th>
-                        </tr>
-                    </thead>
-                    <tbody id="kpiBody">
-                        <tr><td colspan="6" class="empty">Select an employee to view KPI details</td></tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </main>
-
-    <!-- FOOTER -->
-    <footer>
-        <p>📋 MM1-MH H1 Micro KPI Performance Report | Version 85 | Data Source: Admin Excel Upload</p>
-        <p>Last Refresh: <span id="refreshTime">Never</span></p>
-    </footer>
+  <footer>
+    MM1-MH KPI Report | Last Updated: <span id="lastUpdate">-</span><br>
+    Data Source: Admin Excel Upload | Version: 2.1 (Refresh Enabled) | © 2026
+  </footer>
 </div>
 
 <script>
-    // Initialize Page
-    function initializePage() {
-        loadDataFromStorage();
-        updateStatusBadge();
-        // Check for updates every 5 seconds
-        setInterval(checkForUpdates, 5000);
-    }
+// ========== DATA MANAGEMENT ==========
+let adminData = {
+  employees: [],
+  kpiData: {},
+  lastUpdate: 'Never'
+};
 
-    // Check for data updates
-    function checkForUpdates() {
-        const currentData = localStorage.getItem('kpiData');
-        const lastRefresh = localStorage.getItem('lastRefreshTime');
-        
-        if (currentData && currentData !== '{}') {
-            const storedRefresh = document.getElementById('lastUpdateTime').textContent;
-            if (lastRefresh && lastRefresh !== storedRefresh) {
-                location.reload();
-            }
-        }
-    }
+const VALID_CREDENTIALS = {
+  'admin': '12345',
+  'manager': 'pass123'
+};
 
-    // Load Data from localStorage (updated by Admin Panel)
-    function loadDataFromStorage() {
-        try {
-            const kpiData = localStorage.getItem('kpiData');
-            const lastRefresh = localStorage.getItem('lastRefreshTime');
+// ========== LOGIN FUNCTIONS ==========
+window.addEventListener('load', function() {
+  const user = sessionStorage.getItem('adminUser');
+  if (user) {
+    initializeApp();
+  } else {
+    showLoginModal();
+  }
+});
 
-            if (!kpiData || kpiData === '{}') {
-                showRefreshStatus('⚠ No data loaded. Please use <a href="admin.html" style="color:#34d399">Admin Panel</a> to upload Excel file.', 'error');
-                document.getElementById('dataStatus').textContent = 'No Data Loaded';
-                document.getElementById('rankingBody').innerHTML = '<tr><td colspan="5" class="empty">No data available. Upload Excel file from Admin Panel.</td></tr>';
-                return;
-            }
+function showLoginModal() {
+  const loginHTML = `
+    <div style="position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.8);display:flex;align-items:center;justify-content:center;z-index:1000;">
+      <div style="background:#0a2535;border:1px solid #2d6a85;border-radius:12px;padding:30px;min-width:320px;box-shadow:0 10px 40px rgba(0,0,0,0.5);">
+        <h2 style="color:#38bdf8;margin-top:0;font-size:22px;">🔐 Admin Login</h2>
+        <div style="margin-bottom:15px;">
+          <label style="display:block;color:#adc9d8;font-size:12px;margin-bottom:5px;font-weight:800;">User ID</label>
+          <input type="text" id="adminId" placeholder="Enter Admin ID" style="width:100%;padding:10px;background:#061320;border:1px solid #2d6a85;border-radius:5px;color:#eaf2f8;font-size:13px;font-family:Arial,sans-serif;">
+        </div>
+        <div style="margin-bottom:15px;">
+          <label style="display:block;color:#adc9d8;font-size:12px;margin-bottom:5px;font-weight:800;">Password</label>
+          <input type="password" id="adminPassword" placeholder="Enter Password" style="width:100%;padding:10px;background:#061320;border:1px solid #2d6a85;border-radius:5px;color:#eaf2f8;font-size:13px;font-family:Arial,sans-serif;">
+        </div>
+        <div id="loginError" style="color:#ef4444;font-size:11px;margin-bottom:10px;"></div>
+        <div style="display:flex;gap:10px;">
+          <button onclick="adminLogin()" style="flex:1;padding:10px;background:#34d399;border:none;border-radius:5px;color:#06131d;font-weight:800;cursor:pointer;">Login</button>
+          <button onclick="guestView()" style="flex:1;padding:10px;background:#38bdf8;border:none;border-radius:5px;color:#06131d;font-weight:800;cursor:pointer;">Guest View</button>
+        </div>
+        <p style="margin-top:15px;color:#7890a1;font-size:11px;">Demo: ID=admin, Pass=12345</p>
+      </div>
+    </div>
+  `;
+  document.body.insertAdjacentHTML('afterbegin', loginHTML);
+}
 
-            const parsedData = JSON.parse(kpiData);
-            renderDashboard(parsedData);
-            
-            document.getElementById('lastUpdateTime').textContent = lastRefresh || 'Unknown';
-            document.getElementById('refreshTime').textContent = lastRefresh || 'Never';
-            document.getElementById('dataStatus').textContent = '✓ Data Loaded';
-            
-            showRefreshStatus(`✓ Data loaded successfully | Last Updated: ${lastRefresh}`, 'success');
-        } catch (error) {
-            console.error('Error loading data:', error);
-            showRefreshStatus('Error loading data from storage: ' + error.message, 'error');
-        }
-    }
+function adminLogin() {
+  const id = document.getElementById('adminId').value.trim();
+  const pass = document.getElementById('adminPassword').value;
+  
+  if (!id || !pass) {
+    document.getElementById('loginError').textContent = 'Please enter ID and Password';
+    return;
+  }
+  
+  if (VALID_CREDENTIALS[id] && VALID_CREDENTIALS[id] === pass) {
+    sessionStorage.setItem('adminUser', id);
+    sessionStorage.setItem('isAdmin', 'true');
+    document.querySelector('[style*="position:fixed"]').remove();
+    initializeApp();
+  } else {
+    document.getElementById('loginError').textContent = 'Invalid credentials. Try admin/12345';
+  }
+}
 
-    // Render Dashboard
-    function renderDashboard(data) {
-        const employeeData = data['Employee_Master'] || [];
-        const kpiData = data['KPI_Input'] || [];
+function guestView() {
+  sessionStorage.setItem('adminUser', 'guest');
+  sessionStorage.setItem('isAdmin', 'false');
+  document.querySelector('[style*="position:fixed"]').remove();
+  initializeApp();
+}
 
-        if (employeeData.length === 0 || kpiData.length === 0) {
-            document.getElementById('rankingBody').innerHTML = '<tr><td colspan="5" class="empty">No employee or KPI data available in the uploaded Excel</td></tr>';
-            return;
-        }
+function logout() {
+  sessionStorage.clear();
+  localStorage.removeItem('kpiData');
+  location.reload();
+}
 
-        // Calculate grades and rankings
-        const employeeScores = calculateEmployeeScores(employeeData, kpiData);
-        const sortedEmployees = employeeScores.sort((a, b) => b.overallScore - a.overallScore);
+// ========== APP INITIALIZATION ==========
+function initializeApp() {
+  const user = sessionStorage.getItem('adminUser');
+  const isAdmin = sessionStorage.getItem('isAdmin') === 'true';
+  
+  document.getElementById('mainApp').style.display = 'block';
+  document.getElementById('userStatus').textContent = `👤 ${user.toUpperCase()} ${isAdmin ? '(Admin)' : '(Guest)'}`;
+  
+  // Show admin panel only for admin
+  document.getElementById('adminPanelContainer').style.display = isAdmin ? 'block' : 'none';
+  
+  // Load saved data
+  loadStoredData();
+  displayEmployees();
+}
 
-        // Render Rankings Table
-        renderRankingTable(sortedEmployees);
-
-        // Render Grade Distribution
-        renderGradeDistribution(sortedEmployees);
-
-        // Populate Employee Filter
-        populateEmployeeFilter(employeeData);
-
-        // Store for KPI detail view
-        window.currentEmployees = employeeData;
-        window.currentKPIs = kpiData;
-    }
-
-    // Calculate Employee Scores
-    function calculateEmployeeScores(employees, kpis) {
-        return employees.map(emp => {
-            const empKPIs = kpis.filter(k => k.EmpID === emp.ID || k.EmployeeID === emp.ID);
-            
-            let totalAchievement = 0;
-            let count = empKPIs.length || 1;
-
-            empKPIs.forEach(kpi => {
-                const ach = parseFloat(String(kpi.Achievement).replace('%', '')) || 0;
-                totalAchievement += ach;
-            });
-
-            const overallAchievement = totalAchievement / count;
-            const grade = getGradeFromAchievement(overallAchievement);
-            const overallScore = overallAchievement.toFixed(2);
-
-            return {
-                id: emp.ID,
-                name: emp.Name || 'Unknown',
-                department: emp.Department || 'N/A',
-                overallScore: parseFloat(overallScore),
-                grade: grade,
-                achievement: overallAchievement.toFixed(1)
-            };
+// ========== EXCEL UPLOAD & PROCESSING ==========
+function handleExcelUpload(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const data = new Uint8Array(e.target.result);
+      const workbook = XLSX.read(data, {type: 'array'});
+      
+      // Read Employee Master sheet
+      const empSheet = workbook.Sheets[workbook.SheetNames[0]];
+      const employees = XLSX.utils.sheet_to_json(empSheet);
+      
+      // Read KPI Input sheet if exists
+      let kpiData = {};
+      if (workbook.SheetNames[1]) {
+        const kpiSheet = workbook.Sheets[workbook.SheetNames[1]];
+        const kpiRows = XLSX.utils.sheet_to_json(kpiSheet);
+        kpiRows.forEach(row => {
+          const empId = row.EmployeeID || row.ID || row.EmpID;
+          if (!kpiData[empId]) kpiData[empId] = [];
+          kpiData[empId].push(row);
         });
+      }
+      
+      adminData.employees = employees;
+      adminData.kpiData = kpiData;
+      adminData.lastUpdate = new Date().toLocaleString();
+      
+      // Save to localStorage
+      saveStoredData();
+      
+      // Enable refresh button
+      document.getElementById('refreshBtn').disabled = false;
+      
+      showStatus(`✅ Excel loaded: ${employees.length} employees found`, 'success');
+      updateLastUpdate();
+      
+    } catch (error) {
+      showStatus(`❌ Error: ${error.message}`, 'error');
     }
+  };
+  reader.readAsArrayBuffer(file);
+}
 
-    // Get Grade Based on Achievement
-    function getGradeFromAchievement(achievement) {
-        if (achievement >= 120) return 'S';
-        if (achievement >= 100) return 'A';
-        if (achievement >= 80) return 'B';
-        if (achievement >= 60) return 'C';
-        return 'D';
+// ========== REFRESH FUNCTION ==========
+function refreshDataFromLoaded() {
+  if (adminData.employees.length === 0) {
+    showStatus('❌ No data loaded. Please upload Excel first', 'error');
+    return;
+  }
+  
+  // Reload from localStorage
+  loadStoredData();
+  
+  // Re-render UI without page reload
+  displayEmployees();
+  displayKPITable();
+  
+  showStatus('✅ Data refreshed successfully', 'success');
+  updateLastUpdate();
+}
+
+// ========== DATA PERSISTENCE ==========
+function saveStoredData() {
+  localStorage.setItem('kpiData', JSON.stringify(adminData));
+}
+
+function loadStoredData() {
+  const stored = localStorage.getItem('kpiData');
+  if (stored) {
+    adminData = JSON.parse(stored);
+  }
+}
+
+// ========== DISPLAY FUNCTIONS ==========
+function displayEmployees() {
+  const list = document.getElementById('employeesList');
+  const count = document.getElementById('employeeCount');
+  const empty = document.getElementById('emptyState');
+  
+  if (!adminData.employees || adminData.employees.length === 0) {
+    list.innerHTML = '';
+    empty.style.display = 'block';
+    count.textContent = '(0)';
+    return;
+  }
+  
+  empty.style.display = 'none';
+  count.textContent = `(${adminData.employees.length})`;
+  
+  list.innerHTML = adminData.employees.map(emp => {
+    const empId = emp.EmployeeID || emp.ID || emp.EmpID;
+    const empKpis = adminData.kpiData[empId] || [];
+    
+    // Calculate overall score
+    let totalAchievement = 0;
+    if (empKpis.length > 0) {
+      empKpis.forEach(kpi => {
+        const ach = parseFloat(kpi.Achievement) || 0;
+        totalAchievement += ach;
+      });
+      totalAchievement = Math.round(totalAchievement / empKpis.length);
     }
+    
+    return `
+      <div class="personbox">
+        <div class="personname">${emp.Name || emp.EmployeeName || 'N/A'}</div>
+        <div class="meta">ID: ${empId} | Dept: ${emp.Department || 'N/A'}</div>
+        <div class="score">${totalAchievement}%</div>
+      </div>
+    `;
+  }).join('');
+  
+  displayKPITable();
+}
 
-    // Render Ranking Table
-    function renderRankingTable(employees) {
-        const tbody = document.getElementById('rankingBody');
-        tbody.innerHTML = '';
+function displayKPITable() {
+  const tbody = document.getElementById('kpiTableBody');
+  const panel = document.getElementById('kpiPanel');
+  
+  if (!adminData.employees || adminData.employees.length === 0) {
+    panel.style.display = 'none';
+    return;
+  }
+  
+  panel.style.display = 'block';
+  
+  let rows = '';
+  adminData.employees.forEach(emp => {
+    const empId = emp.EmployeeID || emp.ID || emp.EmpID;
+    const empKpis = adminData.kpiData[empId] || [];
+    
+    if (empKpis.length === 0) return;
+    
+    empKpis.forEach(kpi => {
+      rows += `
+        <tr>
+          <td>${emp.Name || emp.EmployeeName || 'N/A'}</td>
+          <td class="param">${kpi.KPI || kpi.KPIParameter || 'N/A'}</td>
+          <td>${kpi.FY_Plan || kpi['FY Plan'] || '-'}</td>
+          <td>${kpi.H1_Plan || kpi['H1 Plan'] || '-'}</td>
+          <td>${kpi.Actual || '-'}</td>
+          <td>${kpi.Achievement || '-'}</td>
+          <td style="font-weight:900;color:#34d399;">${kpi.Grade || '-'}</td>
+        </tr>
+      `;
+    });
+  });
+  
+  tbody.innerHTML = rows || '<tr><td colspan="7" style="text-align:center;color:#7890a1;">No KPI data available</td></tr>';
+}
 
-        employees.forEach((emp, index) => {
-            const row = `
-                <tr>
-                    <td><strong>#${index + 1}</strong></td>
-                    <td style="text-align:left"><strong>${emp.name}</strong></td>
-                    <td>${emp.department}</td>
-                    <td><span class="con">${emp.overallScore}%</span></td>
-                    <td><strong style="font-size:16px;color:#34d399">${emp.grade}</strong></td>
-                </tr>
-            `;
-            tbody.innerHTML += row;
-        });
-    }
+// ========== UTILITY FUNCTIONS ==========
+function showStatus(msg, type) {
+  const status = document.getElementById('uploadStatus');
+  status.textContent = msg;
+  status.className = 'upload-status ' + type;
+  if (type === 'success') setTimeout(() => { status.textContent = ''; }, 4000);
+}
 
-    // Render Grade Distribution
-    function renderGradeDistribution(employees) {
-        const grades = { S: 0, A: 0, B: 0, C: 0, D: 0 };
-        
-        employees.forEach(emp => {
-            grades[emp.grade]++;
-        });
-
-        document.getElementById('countS').textContent = grades.S;
-        document.getElementById('countA').textContent = grades.A;
-        document.getElementById('countB').textContent = grades.B;
-        document.getElementById('countC').textContent = grades.C;
-        document.getElementById('countD').textContent = grades.D;
-    }
-
-    // Populate Employee Filter
-    function populateEmployeeFilter(employees) {
-        const select = document.getElementById('employeeFilter');
-        select.innerHTML = '<option value="">Select Employee to View KPI Details...</option>';
-        
-        employees.forEach(emp => {
-            const option = document.createElement('option');
-            option.value = emp.ID;
-            option.textContent = emp.Name;
-            select.appendChild(option);
-        });
-    }
-
-    // Filter by Employee
-    function filterByEmployee() {
-        const empId = document.getElementById('employeeFilter').value;
-        
-        if (!empId) {
-            document.getElementById('kpiBody').innerHTML = '<tr><td colspan="6" class="empty">Select an employee to view KPI details</td></tr>';
-            return;
-        }
-
-        const kpis = window.currentKPIs.filter(k => k.EmpID === parseInt(empId) || k.EmployeeID === parseInt(empId));
-        const tbody = document.getElementById('kpiBody');
-        tbody.innerHTML = '';
-
-        if (kpis.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="6" class="empty">No KPI data available for this employee</td></tr>';
-            return;
-        }
-
-        kpis.forEach(kpi => {
-            const row = `
-                <tr>
-                    <td style="text-align:left"><strong>${kpi.KPI || 'N/A'}</strong><br><span class="con">${kpi.Description || ''}</span></td>
-                    <td>${kpi.FY_Plan || '-'}</td>
-                    <td>${kpi.H1_Plan || '-'}</td>
-                    <td>${kpi.Actual || '-'}</td>
-                    <td><span class="con"><strong>${String(kpi.Achievement || '0').replace('%', '')}%</strong></span></td>
-                    <td><strong style="font-size:16px;color:#34d399">${kpi.Grade || '-'}</strong></td>
-                </tr>
-            `;
-            tbody.innerHTML += row;
-        });
-    }
-
-    // Show Refresh Status
-    function showRefreshStatus(message, type) {
-        const statusDiv = document.getElementById('refreshStatus');
-        statusDiv.innerHTML = `<div class="refresh-status ${type === 'error' ? 'error' : ''}">${message}</div>`;
-        statusDiv.style.display = 'block';
-    }
-
-    // Update Status Badge
-    function updateStatusBadge() {
-        const data = localStorage.getItem('kpiData');
-        const badge = document.getElementById('statusBadge');
-        
-        if (data && data !== '{}') {
-            badge.textContent = '✓ Data Loaded';
-            badge.classList.remove('error');
-        } else {
-            badge.textContent = '⚠ No Data';
-            badge.classList.add('error');
-        }
-    }
-
-    // Initialize on page load
-    window.onload = initializePage;
+function updateLastUpdate() {
+  document.getElementById('lastUpdateInfo').textContent = `Last Updated: ${adminData.lastUpdate}`;
+  document.getElementById('lastUpdate').textContent = adminData.lastUpdate;
+}
 </script>
 
 </body>
